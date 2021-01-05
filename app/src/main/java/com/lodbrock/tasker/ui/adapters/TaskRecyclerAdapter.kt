@@ -4,7 +4,9 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.R
 import com.lodbrock.tasker.data.model.Task
@@ -47,6 +49,10 @@ class TaskRecyclerAdapter(private var taskList : List<Task>,
             holder.itemTextView.text = TextUtil.threeDotLine(task.title, 20)
         }
 
+        //holder.itemView.setBackgroundResource(R.drawable.task_item_done_shape)
+        //holder.itemTextView.paintFlags = holder
+        //    .itemTextView.paintFlags and(Paint.STRIKE_THRU_TEXT_FLAG)
+
         taskRecyclerType.prepareTaskItem(holder)
     }
 
@@ -54,29 +60,26 @@ class TaskRecyclerAdapter(private var taskList : List<Task>,
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var itemTextView: TextView = itemView.findViewById(R.id.task_item_title)
-
+        var itemBcgImage: ImageView = itemView.findViewById(R.id.task_item_bcg)
     }
 
     enum class TaskRecyclerType {
         PROGRESS{
-            override fun prepareTaskItem(holder: ViewHolder) {
-                holder.itemView.setBackgroundResource(R.drawable.task_item_shape)
-                holder.itemTextView.paintFlags = holder
-                        .itemTextView.paintFlags and(Paint.STRIKE_THRU_TEXT_FLAG).inv()
-            }
+            override fun prepareTaskItem(holder: ViewHolder) {}
         },
+
         DONE {
             override fun prepareTaskItem(holder: ViewHolder) {
-                holder.itemView.setBackgroundResource(R.drawable.task_item_done_shape)
+                val nTextColor = ContextCompat.getColor(holder.itemView.context, R.color.dark_blue)
+                holder.itemTextView.setTextColor(nTextColor)
+                holder.itemBcgImage.setImageResource(R.drawable.task_item_done_shape)
                 holder.itemTextView.paintFlags = holder
-                        .itemTextView.paintFlags and(Paint.STRIKE_THRU_TEXT_FLAG)
+                        .itemTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
         },
+
         MISSED {
-            override fun prepareTaskItem(holder: ViewHolder) {
-                holder.itemTextView.paintFlags = holder
-                        .itemTextView.paintFlags and(Paint.STRIKE_THRU_TEXT_FLAG).inv()
-            }
+            override fun prepareTaskItem(holder: ViewHolder) {}
         };
 
         abstract fun prepareTaskItem(holder: ViewHolder)
