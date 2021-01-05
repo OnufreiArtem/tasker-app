@@ -5,4 +5,5 @@
     <string name="tasks_done_text">Tasks Done</string>
     <string name="home_header_image_description_text">Blue cloud header image</string>
     <string name="tasks_for_today">Tasks for today</string>
+    <string name="task_item_bcg_description">Task item background</string>
 </resources>
