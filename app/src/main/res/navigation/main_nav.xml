@@ -10,4 +10,5 @@
         android:name="com.lodbrock.tasker.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+
 </navigation>
