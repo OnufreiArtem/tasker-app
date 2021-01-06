@@ -8,10 +8,10 @@ import com.lodbrock.tasker.data.model.Task
 
 class HomeViewModel : ViewModel() {
 
-    private var _tasksForToday = MutableLiveData<List<Task>>(readAllTasks())
+    private var _tasksForToday = MutableLiveData<MutableList<Task>>(readAllTasks())
 
-    val tasksForToday : LiveData<List<Task>>
-        get() = _tasksForToday
+    val allTasksForToday : LiveData<List<Task>>
+        get() = MutableLiveData(_tasksForToday.value!!)
 
     val inProgressTasks : LiveData<List<Task>>
         get() = MutableLiveData(_tasksForToday.value!!.filter { !it.done })
@@ -22,13 +22,16 @@ class HomeViewModel : ViewModel() {
     val allTasksNumber : LiveData<Int>
         get() = MutableLiveData(_tasksForToday.value!!.size)
 
-    val inProgressTasksNumber : LiveData<Int>
-        get() = MutableLiveData(inProgressTasks.value!!.size)
+    val doneTasksNumber : LiveData<Int>
+        get() = MutableLiveData(doneTasks.value!!.size)
 
+    fun addTask(taskToAdd: Task) {
+        _tasksForToday.value!!.add(taskToAdd)
+    }
 
-    fun readAllTasks(): List<Task> {
+    private fun readAllTasks(): MutableList<Task> {
 
-        return listOf(
+        return mutableListOf(
                 Task(title = "Task 1", setToDate = Calendar.getInstance()),
                 Task(title = "Task 2", setToDate = Calendar.getInstance()),
                 Task(title = "Task 3", setToDate = Calendar.getInstance(), done = true),
