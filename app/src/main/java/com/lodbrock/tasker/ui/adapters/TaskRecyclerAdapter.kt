@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.R
 import com.lodbrock.tasker.data.model.Task
@@ -14,12 +15,17 @@ import com.lodbrock.tasker.util.TextUtil
 
 
 class TaskRecyclerAdapter(private var taskList : List<Task>,
-                          var taskRecyclerType : TaskRecyclerType)
+                          private val taskRecyclerType : TaskRecyclerType,
+                          var itemClickListener: ItemClickListener? = null)
     : RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>() {
 
 
     fun setTasks(tasks: List<Task>) {
         taskList = tasks
+    }
+
+    fun getTaskAtPosition(position: Int) : Task{
+        return taskList[position]
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,15 +54,15 @@ class TaskRecyclerAdapter(private var taskList : List<Task>,
         } else {
             holder.itemTextView.text = TextUtil.threeDotLine(task.title, 20)
         }
-
-        //holder.itemView.setBackgroundResource(R.drawable.task_item_done_shape)
-        //holder.itemTextView.paintFlags = holder
-        //    .itemTextView.paintFlags and(Paint.STRIKE_THRU_TEXT_FLAG)
+        
+        holder.itemView.setOnClickListener() { itemClickListener?.onClick(position) }
 
         taskRecyclerType.prepareTaskItem(holder)
     }
 
-
+    interface ItemClickListener {
+        fun onClick(position: Int)
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var itemTextView: TextView = itemView.findViewById(R.id.task_item_title)

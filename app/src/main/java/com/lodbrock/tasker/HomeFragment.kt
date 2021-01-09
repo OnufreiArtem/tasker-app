@@ -15,6 +15,20 @@ import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
 import com.lodbrock.tasker.viewmodels.HomeViewModel
 import java.util.*
 import kotlin.collections.ArrayList
+import android.content.Intent
+
+import androidx.recyclerview.widget.ItemTouchHelper
+
+import android.R
+import android.util.Log
+import android.widget.Toast
+
+import com.google.android.material.snackbar.Snackbar
+
+import androidx.annotation.NonNull
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchUIUtil
+
 
 class HomeFragment : Fragment() {
 
@@ -31,13 +45,14 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        //Setting RecyclerViews------------------------
         inProgressRecyclerAdapter = TaskRecyclerAdapter(
-                viewModel.inProgressTasks.value!!,
+                viewModel.inProgressTasks,
                 TaskRecyclerAdapter.TaskRecyclerType.PROGRESS
         )
 
         doneRecyclerAdapter = TaskRecyclerAdapter(
-                viewModel.doneTasks.value!!,
+                viewModel.doneTasks,
                 TaskRecyclerAdapter.TaskRecyclerType.DONE
         )
 
@@ -47,52 +62,68 @@ class HomeFragment : Fragment() {
         binding.tasksDoneList.adapter = doneRecyclerAdapter
         doneRecyclerAdapter.notifyDataSetChanged()
 
-        setHeaderTaskNumberLabel(
-                viewModel.doneTasksNumber.value!!,
-                viewModel.allTasksNumber.value!!
-        )
+        ItemTouchHelper(inProgressItemTouchCallback).attachToRecyclerView(binding.tasksInProgressList)
+        //------------------------------------------------------>
 
         registerObservables()
 
-        viewModel.addTask(Task(title = "New Task", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task2", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task3", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task4", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task5", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task6", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task7", setToDate = Calendar.getInstance()))
-        viewModel.addTask(Task(title = "New Task8", setToDate = Calendar.getInstance()))
+
+        binding.addFloatingBtn.setOnClickListener {
+            viewModel.addTask(Task(title="Something", setToDate = Calendar.getInstance()))
+            Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
+        }
 
         return binding.root
     }
 
     private fun registerObservables(){
 
-        viewModel.allTasksForToday.observe( viewLifecycleOwner) {
-            inProgressRecyclerAdapter.setTasks(viewModel.inProgressTasks.value!!)
-            doneRecyclerAdapter.setTasks(viewModel.doneTasks.value!!)
+        viewModel.allTasksForToday.observe( viewLifecycleOwner, androidx.lifecycle.Observer {
+            inProgressRecyclerAdapter.setTasks(viewModel.inProgressTasks)
+            doneRecyclerAdapter.setTasks(viewModel.doneTasks)
 
-            binding.tasksDoneList.adapter?.notifyDataSetChanged()
-            binding.tasksInProgressList.adapter?.notifyDataSetChanged()
-        }
+            inProgressRecyclerAdapter.notifyDataSetChanged()
+            doneRecyclerAdapter.notifyDataSetChanged()
+            Log.i("HomeFragment", "List changed")
 
-        viewModel.doneTasksNumber.observe( viewLifecycleOwner) {
             setHeaderTaskNumberLabel(
-                    viewModel.doneTasksNumber.value!!,
-                    viewModel.allTasksNumber.value!!
+                    viewModel.doneTasks.size,
+                    viewModel.allTasksForToday.value!!.size
             )
-        }
-
-        viewModel.allTasksNumber.observe( viewLifecycleOwner) {
-            setHeaderTaskNumberLabel(
-                    viewModel.doneTasksNumber.value!!,
-                    viewModel.allTasksNumber.value!!
-            )
-        }
+        })
     }
-
 
     private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int){
         binding.homeTaskNumberLabel.text = "$tasksDoneNumber/$allTasksNumber"
     }
+
+    private val inProgressItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+        0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT ){
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            when(direction) {
+                ItemTouchHelper.LEFT -> {
+                    viewModel.makeTaskDone(
+                            inProgressRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
+                    )
+
+
+                }
+                ItemTouchHelper.RIGHT -> {
+                    viewModel.makeTaskDone(
+                            inProgressRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
+                    )
+                }
+
+            }
+        }
+    }
+
 }
