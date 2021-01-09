@@ -1,33 +1,20 @@
 package com.lodbrock.tasker
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
 import com.lodbrock.tasker.viewmodels.HomeViewModel
 import java.util.*
-import kotlin.collections.ArrayList
-import android.content.Intent
-
-import androidx.recyclerview.widget.ItemTouchHelper
-
-import android.R
-import android.util.Log
-import android.widget.Toast
-
-import com.google.android.material.snackbar.Snackbar
-
-import androidx.annotation.NonNull
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchUIUtil
 
 
 class HomeFragment : Fragment() {
