@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.data.model.Task
@@ -56,8 +57,7 @@ class HomeFragment : Fragment() {
 
 
         binding.addFloatingBtn.setOnClickListener {
-            viewModel.addTask(Task(title="Something", setToDate = Calendar.getInstance()))
-            Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
+            binding.root.findNavController().navigate(R.id.action_homeFragment_to_manageTaskFragment)
         }
 
         return binding.root
