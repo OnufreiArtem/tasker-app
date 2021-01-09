@@ -10,4 +10,14 @@ class Task(
         var setToDate : Calendar,
         var modifiedAt : Calendar = Calendar.getInstance(),
         var createAt : Calendar = Calendar.getInstance()
-);
+) {
+
+    override fun toString() = "Task(id=$id," +
+            " title='$title'," +
+            " description='$description'," +
+            " done=$done," +
+            " setToDate=$setToDate," +
+            " modifiedAt=$modifiedAt," +
+            " createAt=$createAt)"
+
+}
