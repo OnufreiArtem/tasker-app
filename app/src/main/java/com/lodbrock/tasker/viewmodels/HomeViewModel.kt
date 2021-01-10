@@ -40,10 +40,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         Log.d(tag, "Added $task")
     }
 
-    fun makeTaskDone(task: Task){
+    fun makeTaskDone(task: Task) : Boolean{
         task.done = true
-        val result = taskDao.updateTask(task)
-        Log.d(tag,  if (result != 0) "Updated $task" else "Failed to update $task to be done")
+        val done = taskDao.updateTask(task) != 0
+        Log.d(tag,  if (done) "Updated $task" else "Failed to update $task to be done")
+        return done
     }
 
     fun deleteTask(task: Task) : Boolean {
