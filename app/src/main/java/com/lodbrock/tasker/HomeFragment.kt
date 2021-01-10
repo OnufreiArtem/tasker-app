@@ -10,6 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +25,8 @@ import com.lodbrock.tasker.viewmodels.HomeViewModel
 
 
 class HomeFragment : Fragment() {
+
+    private val args by navArgs<HomeFragmentArgs>()
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -60,7 +65,14 @@ class HomeFragment : Fragment() {
 
 
         binding.addFloatingBtn.setOnClickListener {
-            viewModel.addTask(Task(title = "Something", setToDate = YearDayMonth.today()))
+            //viewModel.addTask(Task(title = "Something", setToDate = YearDayMonth.today()))
+            //Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
+        }
+
+        val taskToAdd = args.taskToAddOnStart
+        if(taskToAdd != null) {
+            viewModel.addTask(taskToAdd)
             Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
         }
 
