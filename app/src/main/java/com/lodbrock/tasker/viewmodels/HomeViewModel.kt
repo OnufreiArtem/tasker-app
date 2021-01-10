@@ -1,6 +1,7 @@
 package com.lodbrock.tasker.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.lodbrock.tasker.data.dao.TaskDao
 import com.lodbrock.tasker.data.database.AppDatabase
@@ -9,6 +10,8 @@ import com.lodbrock.tasker.util.YearDayMonth
 
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val tag = "HOME_VIEW_MODEL"
 
     private var taskDao : TaskDao = AppDatabase.getDatabase(application).taskDao()!!
 
@@ -25,19 +28,28 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dbSyncObserver = Observer<List<Task>>(){
         _tasksForToday.value = it
+        Log.d(tag, "Got new data from database")
     }
 
     init {
         taskDao.tasksForDate(YearDayMonth.today()).observeForever(dbSyncObserver)
     }
 
-    fun addTask(taskToAdd: Task) {
-        taskDao.addTask(taskToAdd)
+    fun addTask(task: Task) {
+        taskDao.addTask(task)
+        Log.d(tag, "Added $task")
     }
 
     fun makeTaskDone(task: Task){
         task.done = true
-        taskDao.updateTask(task)
+        val result = taskDao.updateTask(task)
+        Log.d(tag,  if (result != 0) "Updated $task" else "Failed to update $task to be done")
+    }
+
+    fun deleteTask(task: Task) : Boolean {
+        val done = taskDao.deleteTask(task) != 0
+        Log.d(tag, if (done)"$task was deleted" else "Failed to delete $task")
+        return done
     }
 
     override fun onCleared() {
