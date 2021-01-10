@@ -15,14 +15,14 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE setToDate = :date")
     fun tasksForDate(date: YearDayMonth) : LiveData<List<Task>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addTask(task: Task)
 
     @Delete
-    fun deleteTask(task: Task)
+    fun deleteTask(task: Task) : Int
 
     @Update
-    fun updateTask(task: Task)
+    fun updateTask(task: Task) : Int
 
 
 }
