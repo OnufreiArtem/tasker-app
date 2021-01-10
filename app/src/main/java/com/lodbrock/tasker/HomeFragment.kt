@@ -65,8 +65,6 @@ class HomeFragment : Fragment() {
 
 
         binding.addFloatingBtn.setOnClickListener {
-            //viewModel.addTask(Task(title = "Something", setToDate = YearDayMonth.today()))
-            //Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
             Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
         }
 
