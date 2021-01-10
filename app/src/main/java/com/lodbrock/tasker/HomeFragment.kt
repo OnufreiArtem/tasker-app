@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
+import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.HomeViewModel
-import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
 
 
         binding.addFloatingBtn.setOnClickListener {
-            viewModel.addTask(Task(title="Something", setToDate = Calendar.getInstance()))
+            viewModel.addTask(Task(title="Something", setToDate = YearDayMonth.today()))
             Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
         }
 
