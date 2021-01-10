@@ -1,18 +1,21 @@
 package com.lodbrock.tasker.viewmodels
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import java.util.*
+import android.app.Application
+import androidx.lifecycle.*
+import com.lodbrock.tasker.data.dao.TaskDao
+import com.lodbrock.tasker.data.database.AppDatabase
 import com.lodbrock.tasker.data.model.Task
+import com.lodbrock.tasker.util.YearDayMonth
 
-class HomeViewModel : ViewModel() {
 
-    private var _tasksForToday = MutableLiveData<MutableList<Task>>(readAllTasks())
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
+
+    private var taskDao : TaskDao = AppDatabase.getDatabase(application).taskDao()!!
+
+    private var _tasksForToday : MutableLiveData<List<Task>> = MutableLiveData(listOf())
 
     val allTasksForToday: LiveData<List<Task>>
-        get() = _tasksForToday as LiveData<List<Task>>
+        get() = _tasksForToday
 
     val inProgressTasks : List<Task>
         get() = _tasksForToday.value!!.filter { !it.done }
@@ -20,44 +23,25 @@ class HomeViewModel : ViewModel() {
     val doneTasks : List<Task>
         get() = _tasksForToday.value!!.filter { it.done }
 
+    private val dbSyncObserver = Observer<List<Task>>(){
+        _tasksForToday.value = it
+    }
+
+    init {
+        taskDao.tasksForDate(YearDayMonth.today()).observeForever(dbSyncObserver)
+    }
+
     fun addTask(taskToAdd: Task) {
-        val tasks = _tasksForToday.value!!
-        tasks.add(taskToAdd)
-        _tasksForToday.value = tasks
-        Log.i("HomeViewModel", "Added task $taskToAdd")
+        taskDao.addTask(taskToAdd)
     }
 
     fun makeTaskDone(task: Task){
-        for(x in 0 until _tasksForToday.value!!.size) {
-            if (_tasksForToday.value!![x] == task) {
-                task.done = true
-                val tasks = _tasksForToday.value!!
-                tasks[x] = task
-                _tasksForToday.value = tasks
-                Log.i("HomeViewModel", "Such Task was found")
-                break
-            }
-        }
+        task.done = true
+        taskDao.updateTask(task)
     }
 
-    private fun readAllTasks(): MutableList<Task> {
-
-        return mutableListOf(
-                Task(title = "Task 1", setToDate = Calendar.getInstance()),
-                Task(title = "Task 2", setToDate = Calendar.getInstance()),
-                Task(title = "Task 3", setToDate = Calendar.getInstance(), done = true),
-                Task(title = "Task 4", setToDate = Calendar.getInstance()),
-                Task(title = "Task 5", setToDate = Calendar.getInstance()),
-                Task(title = "Task 6", setToDate = Calendar.getInstance(), done = true),
-                Task(title = "Task 7", setToDate = Calendar.getInstance()),
-                Task(title = "Task 8", setToDate = Calendar.getInstance(), done = true),
-                Task(title = "Task 9", setToDate = Calendar.getInstance(), done = true)
-        )
+    override fun onCleared() {
+        allTasksForToday.removeObserver(dbSyncObserver)
+        super.onCleared()
     }
-
-
-
-
-
-
 }
