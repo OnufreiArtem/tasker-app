@@ -14,4 +14,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="AddTaskEditText" parent="Theme.Tasker">
+        <item name="colorControlNormal">@color/blue_700</item>
+        <item name="colorControlActivated">@color/blue_200</item>
+    </style>
 </resources>

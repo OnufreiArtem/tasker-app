@@ -1,6 +1,5 @@
 package com.lodbrock.tasker
 
-import android.R
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -107,13 +106,12 @@ class HomeFragment : Fragment() {
                     val result = viewModel.deleteTask(task)
 
                     if (result) {
-
                         val textColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            com.lodbrock.tasker.R.color.white)
+                            R.color.white)
                         val bcgColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            com.lodbrock.tasker.R.color.dark_blue)
+                            R.color.dark_blue)
                         val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            com.lodbrock.tasker.R.color.red_200)
+                            R.color.red_200)
 
                         Snackbar.make(viewHolder.itemView,
                             "\"${TextUtil.threeDotLine(task.title, 15)}\" was deleted",

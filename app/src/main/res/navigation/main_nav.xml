@@ -9,6 +9,15 @@
         android:id="@+id/homeFragment"
         android:name="com.lodbrock.tasker.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_manageTaskFragment"
+            app:destination="@id/manageTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageTaskFragment"
+        android:name="com.lodbrock.tasker.AddTaskFragment"
+        android:label="fragment_manage_task"
+        tools:layout="@layout/fragment_add_task" />
 
 </navigation>
