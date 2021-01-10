@@ -11,13 +11,22 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_manageTaskFragment"
-            app:destination="@id/manageTaskFragment" />
+            android:id="@+id/action_homeFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment" />
+        <argument
+            android:name="taskToAddOnStart"
+            app:argType="com.lodbrock.tasker.data.model.Task"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
-        android:id="@+id/manageTaskFragment"
+        android:id="@+id/addTaskFragment"
         android:name="com.lodbrock.tasker.AddTaskFragment"
         android:label="fragment_manage_task"
-        tools:layout="@layout/fragment_add_task" />
+        tools:layout="@layout/fragment_add_task" >
+        <action
+            android:id="@+id/action_addTaskFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 
 </navigation>
