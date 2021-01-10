@@ -26,8 +26,6 @@ import com.lodbrock.tasker.viewmodels.HomeViewModel
 
 class HomeFragment : Fragment() {
 
-    private val args by navArgs<HomeFragmentArgs>()
-
     private lateinit var binding: FragmentHomeBinding
 
     private lateinit var inProgressRecyclerAdapter: TaskRecyclerAdapter
@@ -66,12 +64,6 @@ class HomeFragment : Fragment() {
 
         binding.addFloatingBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
-        }
-
-        val taskToAdd = args.taskToAddOnStart
-        if(taskToAdd != null) {
-            viewModel.addTask(taskToAdd)
-            Toast.makeText(this.context, "Added new Task", Toast.LENGTH_SHORT).show()
         }
 
         return binding.root
