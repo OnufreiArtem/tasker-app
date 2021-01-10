@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.data.model.Task
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
 
     private fun registerObservables(){
 
-        viewModel.allTasksForToday.observe( viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.allTasksForToday.observe( viewLifecycleOwner) {
             inProgressRecyclerAdapter.setTasks(viewModel.inProgressTasks)
             doneRecyclerAdapter.setTasks(viewModel.doneTasks)
 
@@ -77,7 +78,7 @@ class HomeFragment : Fragment() {
                     viewModel.doneTasks.size,
                     viewModel.allTasksForToday.value!!.size
             )
-        })
+        }
     }
 
     private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int){
