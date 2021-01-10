@@ -1,12 +1,14 @@
 package com.lodbrock.tasker.util
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.*
-
+@Parcelize
 class YearDayMonth(
     val year: Int,
     val month: Int,
     val day: Int
-) {
+):Parcelable {
     override fun toString(): String {
         return "$year:$month:$day"
     }

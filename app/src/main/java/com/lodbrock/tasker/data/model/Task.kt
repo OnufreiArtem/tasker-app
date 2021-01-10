@@ -1,12 +1,13 @@
 package com.lodbrock.tasker.data.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.lodbrock.tasker.util.Converters
+import kotlinx.parcelize.Parcelize
 import com.lodbrock.tasker.util.YearDayMonth
 import java.util.*
 
+@Parcelize
 @Entity
 data class Task(
         @PrimaryKey(autoGenerate = true)
@@ -17,7 +18,7 @@ data class Task(
         var setToDate : YearDayMonth,
         var modifiedAt : Calendar = Calendar.getInstance(),
         var createAt : Calendar = Calendar.getInstance()
-) {
+): Parcelable {
 
     override fun toString() = "Task(id=$id," +
             " title='$title'," +
