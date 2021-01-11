@@ -1,12 +1,17 @@
 package com.lodbrock.tasker
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentAddTaskBinding
@@ -21,6 +26,8 @@ class AddTaskFragment : Fragment() {
 
     private val viewModel : AddTaskViewModel by activityViewModels()
 
+    private var dateToAddTask = MutableLiveData<YearDayMonth>(null)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,11 +37,51 @@ class AddTaskFragment : Fragment() {
 
         configSwitch()
 
+        dateToAddTask.observe(viewLifecycleOwner, {
+            val selectedDate = dateToAddTask.value
+            if(selectedDate != null) {
+                val btnText =
+                    "${selectedDate.year}:${selectedDate.month}:${selectedDate.day}"
+                binding.selectDateBtn.text = btnText
+            }
+        })
+
+        binding.selectDateBtn.setOnClickListener{
+            val date = dateToAddTask.value ?: YearDayMonth.today()
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                {_: DatePicker, year: Int, month: Int, day: Int
+                    -> dateToAddTask.value = YearDayMonth(year, month, day) },
+                date.year,
+                date.month,
+                date.day)
+
+            datePickerDialog.show()
+        }
+
         binding.addTaskBtn.setOnClickListener{
+
+            var mDateToAdd = dateToAddTask.value
+
+            if(binding.switchIsCurrentDate.isChecked) {
+                mDateToAdd = YearDayMonth.today()
+            }
+
+            if(mDateToAdd == null) {
+                activity?.let {
+                    val builder = AlertDialog.Builder(it)
+                    builder.apply {
+                        setPositiveButton("OK") { _, _ -> {} }
+                        setMessage("You need to specify date for your task")
+                    }
+                }?.show()
+                return@setOnClickListener
+            }
+
             val task = Task(
                 title = binding.titleEdit.text.toString(),
                 description = binding.descriptionEdit.text.toString(),
-                setToDate = YearDayMonth.today()
+                setToDate = mDateToAdd
             )
 
             viewModel.addTask(task)
