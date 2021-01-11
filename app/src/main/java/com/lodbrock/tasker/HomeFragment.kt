@@ -57,6 +57,8 @@ class HomeFragment : Fragment() {
         doneRecyclerAdapter.notifyDataSetChanged()
 
         ItemTouchHelper(inProgressItemTouchCallback).attachToRecyclerView(binding.tasksInProgressList)
+        ItemTouchHelper(doneItemTouchCallback).attachToRecyclerView(binding.tasksDoneList)
+
         //------------------------------------------------------>
 
         registerObservables()
@@ -135,6 +137,58 @@ class HomeFragment : Fragment() {
                 ItemTouchHelper.RIGHT -> {
                     if(!viewModel.makeTaskDone(task)) {
                         Toast.makeText(context, "Failed to make task done", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+            }
+        }
+    }
+    private val doneItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val task = doneRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
+
+            when(direction) {
+                ItemTouchHelper.LEFT -> {
+                    val result = viewModel.deleteTask(task)
+
+                    if (result) {
+                        val textColor = ContextCompat.getColor(viewHolder.itemView.context,
+                            R.color.white)
+                        val bcgColor = ContextCompat.getColor(viewHolder.itemView.context,
+                            R.color.dark_blue)
+                        val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
+                            R.color.red_200)
+
+                        Snackbar.make(viewHolder.itemView,
+                            "\"${TextUtil.threeDotLine(task.title, 15)}\" was deleted",
+                            Snackbar.LENGTH_LONG)
+                            .setTextColor(textColor)
+                            .setBackgroundTint(bcgColor)
+                            .setActionTextColor(actionColor)
+                            .setAction("Undo") {
+                                viewModel.addTask(task)
+                            }
+                            .show()
+                    } else {
+                        Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                }
+
+                ItemTouchHelper.RIGHT -> {
+                    if(!viewModel.makeTaskNotDone(task)) {
+                        Toast.makeText(context, "Failed to make task not done", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
