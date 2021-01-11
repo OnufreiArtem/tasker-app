@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@id/homeFragment"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        <item
+            android:id="@id/addTaskFragment"
+            android:icon="@drawable/ic_home"
+            android:title="All Tasks" />
+        <item
+            android:icon="@drawable/ic_home"
+            android:title="Progress tasks" />
+        <item
+            android:icon="@drawable/ic_home"
+            android:title="Done tasks" />
+        <item
+            android:icon="@drawable/ic_home"
+            android:title="Missed tasks" />
+        <item
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+    </group>
+
+    <item android:title="Settings" >
+        <menu>
+            <item
+                android:icon="@drawable/ic_star"
+                android:title="Rate app" />
+            <item
+                android:icon="@drawable/ic_share"
+                android:title="Share" />
+        </menu>
+    </item>
+</menu>
