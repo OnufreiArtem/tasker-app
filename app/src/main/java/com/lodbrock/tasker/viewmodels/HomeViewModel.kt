@@ -47,6 +47,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         return done
     }
 
+    fun makeTaskNotDone(task: Task) : Boolean{
+        task.done = false
+        val done = taskDao.updateTask(task) != 0
+        Log.d(tag,  if (done) "Updated $task" else "Failed to update $task to be not done")
+        return done
+    }
+
     fun deleteTask(task: Task) : Boolean {
         val done = taskDao.deleteTask(task) != 0
         Log.d(tag, if (done)"$task was deleted" else "Failed to delete $task")
