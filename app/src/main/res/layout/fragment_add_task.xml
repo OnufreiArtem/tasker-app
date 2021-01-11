@@ -32,10 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/title_edit_label"
             android:autofillHints="Some Task"
+            style="@style/Theme.Tasker.EditText"
             android:inputType="text"
             android:singleLine="true"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/dark_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_edit_label" />
@@ -58,9 +57,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/description_edit_label"
             android:autofillHints=""
+            style="@style/Theme.Tasker.EditText"
+            android:textSize="30sp"
             android:inputType="textMultiLine"
-            android:textColor="@color/dark_blue"
-            android:layout_marginBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_edit_label" />
