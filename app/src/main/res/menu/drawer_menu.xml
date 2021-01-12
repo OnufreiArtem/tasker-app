@@ -8,24 +8,15 @@
             android:icon="@drawable/ic_home"
             android:title="Home" />
         <item
-            android:id="@id/addTaskFragment"
+            android:id="@id/seeAllTasksFragment"
             android:icon="@drawable/ic_home"
             android:title="All Tasks" />
-        <item
-            android:icon="@drawable/ic_home"
-            android:title="Progress tasks" />
-        <item
-            android:icon="@drawable/ic_home"
-            android:title="Done tasks" />
-        <item
-            android:icon="@drawable/ic_home"
-            android:title="Missed tasks" />
         <item
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
     </group>
 
-    <item android:title="Settings" >
+    <item android:title="Community" >
         <menu>
             <item
                 android:icon="@drawable/ic_star"
