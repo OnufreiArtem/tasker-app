@@ -7,14 +7,30 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorAccent">@color/red_500</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/green_200</item>
-        <item name="colorSecondaryVariant">@color/green_500</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondary">@color/green_500</item>
+        <item name="colorSecondaryVariant">@color/dark_blue</item>
+        <item name="colorOnSecondary">@color/red_200</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white</item>
-        <!-- <item name="actionBarStyle">@style/Theme.Tasker.ActionBar</item> -->
+
+        <item name="inProgressColor">@color/white</item>
+        <item name="doneColor">@color/green_200</item>
+        <item name="missedColor">@color/red_500</item>
+        <item name="semiTransparentHintColor">@color/transparent_grey</item>
+    </style>
+
+    <declare-styleable name="TaskerColors">
+        <attr name="inProgressColor" format="color"/>
+        <attr name="doneColor" format="color"/>
+        <attr name="missedColor" format="color"/>
+        <attr name="semiTransparentHintColor" format="color"/>
+    </declare-styleable>
+
+
+    <style name="Theme.Tasker.SemiTransparentText">
+        <item name="android:textColor">@color/transparent_grey</item>
     </style>
 
     <style name="Theme.Tasker.ActionBar" parent="Theme.Tasker">
@@ -27,6 +43,14 @@
     </style>
 
     <style name="Theme.Tasker.EditText" parent="Theme.Tasker">
+        <item name="android:textColor">@color/dark_blue</item>
+    </style>
+
+    <style name="Theme.Tasker.ArchiveItem" parent="Theme.Tasker">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="Theme.Tasker.ArchiveItem.Text" parent="Theme.Tasker">
         <item name="android:textColor">@color/dark_blue</item>
     </style>
 </resources>
