@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SeeAllTasksFragment">
+<!--
+    <CalendarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+-->
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/applandeoCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:datePicker="true"
+        app:daysLabelsColor="@color/dark_blue"
+        app:headerColor="@color/white"
+        app:headerLabelColor="@color/dark_blue"
+        app:todayLabelColor="?attr/colorAccent"
+        app:type="one_day_picker"
+        app:selectionColor="@color/blue_700"
+        app:selectionLabelColor="@color/white"
+        app:eventsEnabled="true"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:textColor="@color/white"
+            app:cardCornerRadius="5dp"
+            app:cardUseCompatPadding="true"
+            app:cardPreventCornerOverlap="true"
+            app:cardBackgroundColor="@color/blue_500">
+
+            <TextView
+                android:id="@+id/archive_status_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="All tasks for 12.01"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:padding="12dp"
+                android:textAlignment="center" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/archive_empty_list_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Tasks for this date"
+            android:textSize="24dp"
+            android:textColor="?attr/semiTransparentHintColor"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/task_archive_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/task_archive_item"
+            tools:itemCount="3"/>
+
+    </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
