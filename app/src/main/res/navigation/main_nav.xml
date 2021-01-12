@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addTaskFragment"
             app:destination="@id/addTaskFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_seeAllTasksFragment"
+            app:destination="@id/seeAllTasksFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -23,5 +26,10 @@
             android:id="@+id/action_addTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/seeAllTasksFragment"
+        android:name="com.lodbrock.tasker.SeeAllTasksFragment"
+        android:label="All tasks"
+        tools:layout="@layout/fragment_see_all_tasks" />
 
 </navigation>
