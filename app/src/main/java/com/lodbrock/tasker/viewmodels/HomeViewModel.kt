@@ -17,6 +17,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _tasksForToday : MutableLiveData<List<Task>> = MutableLiveData(listOf())
 
+    private lateinit var liveDataToClear : LiveData<List<Task>>
+
     val allTasksForToday: LiveData<List<Task>>
         get() = _tasksForToday
 
@@ -32,7 +34,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
-        taskDao.tasksForDate(YearDayMonth.today()).observeForever(dbSyncObserver)
+        liveDataToClear = taskDao.tasksForDate(YearDayMonth.today())
+        liveDataToClear.observeForever(dbSyncObserver)
     }
 
     fun addTask(task: Task) {
@@ -61,7 +64,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     override fun onCleared() {
-        allTasksForToday.removeObserver(dbSyncObserver)
+        liveDataToClear.removeObserver(dbSyncObserver)
         super.onCleared()
     }
 }
