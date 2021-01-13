@@ -5,6 +5,7 @@ import androidx.room.*
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.util.Converters
 import com.lodbrock.tasker.util.YearDayMonth
+import java.util.*
 
 @Dao
 interface TaskDao {
@@ -15,14 +16,16 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE setToDate = :date")
     fun tasksForDate(date: YearDayMonth) : LiveData<List<Task>>
 
+    @Query("SELECT DISTINCT setToDate FROM task ")
+    fun allDatesWithTasks() : LiveData<List<YearDayMonth>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addTask(task: Task)
+    suspend fun addTask(task: Task)
 
     @Delete
-    fun deleteTask(task: Task) : Int
+    suspend fun deleteTask(task: Task) : Int
 
     @Update
-    fun updateTask(task: Task) : Int
-
+    suspend fun updateTask(task: Task) : Int
 
 }
