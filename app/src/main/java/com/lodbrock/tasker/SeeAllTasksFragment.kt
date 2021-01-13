@@ -28,14 +28,12 @@ class SeeAllTasksFragment : Fragment() {
     ): View {
         binding = FragmentSeeAllTasksBinding.inflate(layoutInflater, container, false)
 
-        viewModel.allTasksForToday.observe(viewLifecycleOwner, {
-            taskArchiveAdapter.setTaskList(
-                viewModel.getTaskForDate(YearDayMonth.today())
-            )
+        viewModel.getAllTasksForToday().observe(viewLifecycleOwner, { list ->
+            taskArchiveAdapter.setTaskList(list)
             if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
         })
 
-        viewModel.allEventDates.observe(viewLifecycleOwner, { dates ->
+        viewModel.getAllEventDates().observe(viewLifecycleOwner, { dates ->
             val events: MutableList<EventDay> = ArrayList()
 
             dates.forEach { date ->
@@ -49,11 +47,9 @@ class SeeAllTasksFragment : Fragment() {
 
         binding.applandeoCalendar.setOnDayClickListener {
             val date = YearDayMonth.fromCalendar(it.calendar)
-            taskArchiveAdapter.setTaskList(viewModel.getTaskForDate(date))
+            viewModel.switchDayLiveData(date)
             val status = "All tasks for ${date.month+1}.${date.day}"
             binding.archiveStatusLabel.text = status
-            println(taskArchiveAdapter.itemCount == 0)
-            if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
         }
 
         return binding.root

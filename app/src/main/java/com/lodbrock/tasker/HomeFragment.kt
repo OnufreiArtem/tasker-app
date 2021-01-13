@@ -9,18 +9,14 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.observe
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
 import com.lodbrock.tasker.util.TextUtil
-import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.HomeViewModel
 
 
@@ -39,14 +35,16 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        registerObservables()
+
         //Setting RecyclerViews------------------------
         inProgressRecyclerAdapter = TaskRecyclerAdapter(
-            viewModel.inProgressTasks,
+            viewModel.getInProgressTasks(),
             TaskRecyclerAdapter.TaskRecyclerType.PROGRESS
         )
 
         doneRecyclerAdapter = TaskRecyclerAdapter(
-            viewModel.doneTasks,
+            viewModel.getDoneTasks(),
             TaskRecyclerAdapter.TaskRecyclerType.DONE
         )
 
@@ -61,8 +59,6 @@ class HomeFragment : Fragment() {
 
         //------------------------------------------------------>
 
-        registerObservables()
-
 
         binding.addFloatingBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
@@ -73,19 +69,19 @@ class HomeFragment : Fragment() {
 
     private fun registerObservables(){
 
-        viewModel.allTasksForToday.observe(viewLifecycleOwner) {
-            inProgressRecyclerAdapter.setTasks(viewModel.inProgressTasks)
-            doneRecyclerAdapter.setTasks(viewModel.doneTasks)
+        viewModel.getAllTasksForToday().observe(viewLifecycleOwner, {
+            inProgressRecyclerAdapter.setTasks(viewModel.getInProgressTasks())
+            doneRecyclerAdapter.setTasks(viewModel.getDoneTasks())
 
             inProgressRecyclerAdapter.notifyDataSetChanged()
             doneRecyclerAdapter.notifyDataSetChanged()
             Log.i("HomeFragment", "List changed")
 
             setHeaderTaskNumberLabel(
-                viewModel.doneTasks.size,
-                viewModel.allTasksForToday.value!!.size
+                viewModel.getDoneTasks().size,
+                viewModel.getAllTasksForToday().value?.size ?: 0
             )
-        }
+        })
     }
 
     private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int){
