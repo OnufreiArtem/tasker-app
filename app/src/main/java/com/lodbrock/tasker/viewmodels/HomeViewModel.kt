@@ -17,16 +17,20 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _tasksForToday : MutableLiveData<List<Task>> = MutableLiveData(listOf())
 
-    private lateinit var liveDataToClear : LiveData<List<Task>>
+    private var liveDataToClear : LiveData<List<Task>>
 
     val allTasksForToday: LiveData<List<Task>>
         get() = _tasksForToday
 
     val inProgressTasks : List<Task>
-        get() = _tasksForToday.value!!.filter { !it.done }
+        get() = _tasksForToday.value?.also{
+            it.filter { item -> item.done }
+        } ?: listOf()
 
     val doneTasks : List<Task>
-        get() = _tasksForToday.value!!.filter { it.done }
+        get() = _tasksForToday.value?.also {
+            it.filter { item -> item.done }
+        } ?: listOf()
 
     private val dbSyncObserver = Observer<List<Task>>(){
         _tasksForToday.value = it
