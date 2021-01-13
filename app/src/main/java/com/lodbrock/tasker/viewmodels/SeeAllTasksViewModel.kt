@@ -1,55 +1,51 @@
 package com.lodbrock.tasker.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import com.lodbrock.tasker.data.dao.TaskDao
-import com.lodbrock.tasker.data.database.AppDatabase
 import com.lodbrock.tasker.data.model.Task
+import com.lodbrock.tasker.data.repositories.AppRepository
 import com.lodbrock.tasker.util.YearDayMonth
-import java.util.*
+import java.util.Calendar
 
 class SeeAllTasksViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tag = "SEE_ALL_TASKS_VIEW_MODEL"
 
-    private lateinit var liveDataToClean : LiveData<List<Task>>
+    private val repository = AppRepository(application)
 
-    private var taskDao : TaskDao = AppDatabase.getDatabase(application).taskDao()!!
+    private var currentTasksLiveData : LiveData<List<Task>>
 
-    private var _allTasks : MutableLiveData<List<Task>> = MutableLiveData(listOf())
+    private var _allTasksForToday = MediatorLiveData<List<Task>>()
+    private var _allEventDates = MediatorLiveData<List<Calendar>>()
 
-    private var _allDates : MutableLiveData<List<Calendar>> = MutableLiveData(listOf())
-
-    val allTasksForToday: LiveData<List<Task>>
-        get() = _allTasks
-
-    val allEventDates: LiveData<List<Calendar>>
-        get() = _allDates
-
-    fun getTaskForDate(ydm: YearDayMonth) : List<Task> {
-        return (_allTasks.value ?: listOf()).filter { it.setToDate == ydm }
+    fun getAllTasksForToday(): LiveData<List<Task>> {
+       return _allTasksForToday
     }
 
-
-    private val dbSyncObserver = Observer<List<Task>>(){ list ->
-        _allTasks.value = list
-        _allDates.value = list.map { it.setToDate }.distinct().map { it.toCalendar() }
-        Log.d(tag, "Got new data from database")
+    fun getAllEventDates(): LiveData<List<Calendar>> {
+        return _allEventDates
     }
 
+    private val allTasksObserver : Observer<List<Task>> = Observer(){
+        _allTasksForToday.value = it
+    }
+
+    fun switchDayLiveData(dateToSwitch: YearDayMonth) {
+        _allTasksForToday.removeSource(currentTasksLiveData)
+        currentTasksLiveData = repository.getTasksForDate(dateToSwitch)
+        _allTasksForToday.addSource(currentTasksLiveData, allTasksObserver)
+    }
 
     init {
-        liveDataToClean = taskDao.allTasks()
-        liveDataToClean.observeForever(dbSyncObserver)
-    }
+        currentTasksLiveData = repository.getTasksForDate(YearDayMonth.today())
+        _allTasksForToday.addSource(currentTasksLiveData, allTasksObserver)
+        _allEventDates.addSource(repository.allDatesWithTasks()) {
+            _allEventDates.value = it.map { item -> item.toCalendar() }
+        }
 
-    override fun onCleared() {
-        liveDataToClean.removeObserver(dbSyncObserver)
-        super.onCleared()
     }
 
 

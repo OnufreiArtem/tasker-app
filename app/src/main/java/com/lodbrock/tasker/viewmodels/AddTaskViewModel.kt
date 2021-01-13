@@ -1,20 +1,21 @@
 package com.lodbrock.tasker.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.lodbrock.tasker.data.dao.TaskDao
-import com.lodbrock.tasker.data.database.AppDatabase
+import androidx.lifecycle.viewModelScope
 import com.lodbrock.tasker.data.model.Task
+import com.lodbrock.tasker.data.repositories.AppRepository
+import kotlinx.coroutines.launch
 
 class AddTaskViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tag = "ADD_TASK_VIEW_MODEL"
 
-    private var taskDao : TaskDao = AppDatabase.getDatabase(application).taskDao()!!
+    private val repository = AppRepository(application)
 
     fun addTask(task: Task) {
-        taskDao.addTask(task)
-        Log.d(tag, "Added $task")
+        viewModelScope.launch {
+            repository.addTasks(task)
+        }
     }
 }

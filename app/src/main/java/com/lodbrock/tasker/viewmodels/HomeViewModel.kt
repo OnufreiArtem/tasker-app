@@ -3,34 +3,27 @@ package com.lodbrock.tasker.viewmodels
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.lodbrock.tasker.data.dao.TaskDao
-import com.lodbrock.tasker.data.database.AppDatabase
 import com.lodbrock.tasker.data.model.Task
+import com.lodbrock.tasker.data.repositories.AppRepository
 import com.lodbrock.tasker.util.YearDayMonth
+import kotlinx.coroutines.launch
 
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tag = "HOME_VIEW_MODEL"
 
-    private var taskDao : TaskDao = AppDatabase.getDatabase(application).taskDao()!!
+    private val repository = AppRepository(application)
 
-    private var _tasksForToday : MutableLiveData<List<Task>> = MutableLiveData(listOf())
+    private var _tasksForToday = MediatorLiveData<List<Task>>()
 
-    private var liveDataToClear : LiveData<List<Task>>
+    fun getAllTasksForToday(): LiveData<List<Task>> = _tasksForToday
 
-    val allTasksForToday: LiveData<List<Task>>
-        get() = _tasksForToday
+    fun getInProgressTasks() : List<Task>
+        = _tasksForToday.value?.let { it.filter { item -> !item.done } } ?: listOf()
 
-    val inProgressTasks : List<Task>
-        get() = _tasksForToday.value?.also{
-            it.filter { item -> item.done }
-        } ?: listOf()
-
-    val doneTasks : List<Task>
-        get() = _tasksForToday.value?.also {
-            it.filter { item -> item.done }
-        } ?: listOf()
+    fun getDoneTasks() : List<Task>
+        = _tasksForToday.value?.let { it.filter { item -> item.done } } ?: listOf()
 
     private val dbSyncObserver = Observer<List<Task>>(){
         _tasksForToday.value = it
@@ -38,37 +31,31 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
-        liveDataToClear = taskDao.tasksForDate(YearDayMonth.today())
-        liveDataToClear.observeForever(dbSyncObserver)
+        _tasksForToday.addSource(repository.getTasksForDate(YearDayMonth.today()), dbSyncObserver)
     }
 
     fun addTask(task: Task) {
-        taskDao.addTask(task)
-        Log.d(tag, "Added $task")
+        viewModelScope.launch { repository.addTasks(task) }
     }
 
     fun makeTaskDone(task: Task) : Boolean{
-        task.done = true
-        val done = taskDao.updateTask(task) != 0
-        Log.d(tag,  if (done) "Updated $task" else "Failed to update $task to be done")
-        return done
+        viewModelScope.launch {
+            repository.makeTaskDone(task)
+        }
+        return true
     }
 
     fun makeTaskNotDone(task: Task) : Boolean{
-        task.done = false
-        val done = taskDao.updateTask(task) != 0
-        Log.d(tag,  if (done) "Updated $task" else "Failed to update $task to be not done")
-        return done
+        viewModelScope.launch {
+            repository.makeTaskNotDone(task)
+        }
+        return true
     }
 
     fun deleteTask(task: Task) : Boolean {
-        val done = taskDao.deleteTask(task) != 0
-        Log.d(tag, if (done)"$task was deleted" else "Failed to delete $task")
-        return done
-    }
-
-    override fun onCleared() {
-        liveDataToClear.removeObserver(dbSyncObserver)
-        super.onCleared()
+        viewModelScope.launch {
+            repository.deleteTask(task)
+        }
+        return true
     }
 }
