@@ -11,7 +11,8 @@ import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
 
-class TaskArchiveRecyclerAdapter(private var taskList : List<Task>)
+class TaskArchiveRecyclerAdapter(private var taskList : List<Task>,
+                                 private var itemClickListener: ItemClickListener? = null)
     : RecyclerView.Adapter<TaskArchiveRecyclerAdapter.ViewHolder>() {
 
     fun setTaskList(taskList: List<Task>) {
@@ -59,6 +60,10 @@ class TaskArchiveRecyclerAdapter(private var taskList : List<Task>)
         }
 
         holder.itemIconImage.setImageResource(icResource)
+
+        itemClickListener?.let { listener ->
+            holder.itemView.setOnClickListener{ listener.onClick(task, position)  }
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
