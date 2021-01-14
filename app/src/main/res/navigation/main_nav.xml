@@ -11,11 +11,13 @@
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_addTaskFragment"
-            app:destination="@id/addTaskFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_seeAllTasksFragment"
             app:destination="@id/seeAllTasksFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_taskViewFragment"
+            app:destination="@id/taskViewFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -23,13 +25,34 @@
         android:label="Add Task"
         tools:layout="@layout/fragment_add_task" >
         <action
-            android:id="@+id/action_addTaskFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_addTaskFragment_to_taskViewFragment"
+            app:destination="@id/taskViewFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/seeAllTasksFragment"
         android:name="com.lodbrock.tasker.SeeAllTasksFragment"
         android:label="All tasks"
-        tools:layout="@layout/fragment_see_all_tasks" />
+        tools:layout="@layout/fragment_see_all_tasks" >
+        <action
+            android:id="@+id/action_seeAllTasksFragment_to_taskViewFragment"
+            app:destination="@id/taskViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskViewFragment"
+        android:name="com.lodbrock.tasker.TaskViewFragment"
+        android:label="View Task"
+        tools:layout="@layout/fragment_task_view" >
+        <action
+            android:id="@+id/action_taskViewFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="taskToView"
+            app:argType="com.lodbrock.tasker.data.model.Task"
+            app:nullable="true" />
+    </fragment>
 
 </navigation>
