@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lodbrock.tasker.R
 import com.lodbrock.tasker.data.model.Task
@@ -54,15 +53,14 @@ class TaskRecyclerAdapter(private var taskList : List<Task>,
         } else {
             holder.itemTextView.text = TextUtil.threeDotLine(task.title, 20)
         }
-        
-        holder.itemView.setOnClickListener() { itemClickListener?.onClick(position) }
+
+        itemClickListener?.let {
+                listener -> holder.itemView.setOnClickListener() { listener.onClick(task, position)}
+        }
 
         taskRecyclerType.prepareTaskItem(holder)
     }
 
-    interface ItemClickListener {
-        fun onClick(position: Int)
-    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var itemTextView: TextView = itemView.findViewById(R.id.task_item_title)
