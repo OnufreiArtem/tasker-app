@@ -9,13 +9,13 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
+import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.viewmodels.HomeViewModel
 
@@ -27,13 +27,16 @@ class HomeFragment : Fragment() {
     private lateinit var inProgressRecyclerAdapter: TaskRecyclerAdapter
     private lateinit var doneRecyclerAdapter: TaskRecyclerAdapter
 
-    private val viewModel : HomeViewModel by activityViewModels()
+    private lateinit var taskDialog: TaskDialog
+
+    private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        taskDialog = TaskDialog(activity, layoutInflater)
 
         registerObservables()
 
@@ -59,15 +62,27 @@ class HomeFragment : Fragment() {
 
         //------------------------------------------------------>
 
-
         binding.addFloatingBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
+            //Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
+            taskDialog.showTaskDialog(
+                "Add Task For Today",
+                "Add",
+                object : TaskDialog.OnDialogClickListener{
+                    override fun onClick(task: Task?) {
+                        task?.let {
+                            viewModel.addTask(task)
+                        }
+                    }
+                },
+                null
+                )
+
         }
 
         return binding.root
     }
 
-    private fun registerObservables(){
+    private fun registerObservables() {
 
         viewModel.getAllTasksForToday().observe(viewLifecycleOwner, {
             inProgressRecyclerAdapter.setTasks(viewModel.getInProgressTasks())
@@ -84,16 +99,16 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int){
+    private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int) {
         binding.homeTaskNumberLabel.text = "$tasksDoneNumber/$allTasksNumber"
     }
 
     private val inProgressItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
+        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+            target: RecyclerView.ViewHolder,
         ): Boolean {
             return false
         }
@@ -101,7 +116,7 @@ class HomeFragment : Fragment() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val task = inProgressRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
 
-            when(direction) {
+            when (direction) {
                 ItemTouchHelper.LEFT -> {
                     val result = viewModel.deleteTask(task)
 
@@ -131,7 +146,7 @@ class HomeFragment : Fragment() {
                 }
 
                 ItemTouchHelper.RIGHT -> {
-                    if(!viewModel.makeTaskDone(task)) {
+                    if (!viewModel.makeTaskDone(task)) {
                         Toast.makeText(context, "Failed to make task done", Toast.LENGTH_SHORT)
                             .show()
                     }
@@ -141,11 +156,11 @@ class HomeFragment : Fragment() {
         }
     }
     private val doneItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
+        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+            target: RecyclerView.ViewHolder,
         ): Boolean {
             return false
         }
@@ -153,7 +168,7 @@ class HomeFragment : Fragment() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val task = doneRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
 
-            when(direction) {
+            when (direction) {
                 ItemTouchHelper.LEFT -> {
                     val result = viewModel.deleteTask(task)
 
@@ -183,7 +198,7 @@ class HomeFragment : Fragment() {
                 }
 
                 ItemTouchHelper.RIGHT -> {
-                    if(!viewModel.makeTaskNotDone(task)) {
+                    if (!viewModel.makeTaskNotDone(task)) {
                         Toast.makeText(context, "Failed to make task not done", Toast.LENGTH_SHORT)
                             .show()
                     }
