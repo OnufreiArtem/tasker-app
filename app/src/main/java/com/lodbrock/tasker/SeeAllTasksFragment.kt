@@ -8,25 +8,42 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.applandeo.materialcalendarview.EventDay
+import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
+import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskArchiveRecyclerAdapter
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
+import java.text.DateFormat
 
 class SeeAllTasksFragment : Fragment() {
 
     private lateinit var binding : FragmentSeeAllTasksBinding
 
-    private val taskArchiveAdapter = TaskArchiveRecyclerAdapter(listOf())
+    private lateinit var taskArchiveAdapter : TaskArchiveRecyclerAdapter
 
     private val viewModel : SeeAllTasksViewModel by activityViewModels()
+
+    private lateinit var listener : ItemClickListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSeeAllTasksBinding.inflate(layoutInflater, container, false)
+
+        listener = object : ItemClickListener {
+            override fun onClick(task: Task, position: Int) {
+                val action = SeeAllTasksFragmentDirections
+                    .actionSeeAllTasksFragmentToTaskViewFragment(taskToView = task)
+                Navigation.findNavController(binding.root).navigate(action)
+            }
+        }
+
+        taskArchiveAdapter = TaskArchiveRecyclerAdapter(listOf(), listener)
 
         registerObservables()
 
@@ -35,7 +52,8 @@ class SeeAllTasksFragment : Fragment() {
         binding.applandeoCalendar.setOnDayClickListener {
             val date = YearDayMonth.fromCalendar(it.calendar)
             viewModel.switchDayLiveData(date)
-            val status = "All tasks for ${date.month+1}.${date.day}"
+            val formattedDate = DateFormat.getDateInstance().format(it.calendar.time)
+            val status = "Tasks for $formattedDate"
             binding.archiveStatusLabel.text = status
         }
 

@@ -9,11 +9,13 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
+import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
 import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
@@ -40,15 +42,24 @@ class HomeFragment : Fragment() {
 
         registerObservables()
 
+        val listener = object : ItemClickListener {
+            override fun onClick(task: Task, position: Int) {
+                val action = HomeFragmentDirections.actionHomeFragmentToTaskViewFragment(task)
+                Navigation.findNavController(binding.root).navigate(action)
+            }
+        }
+
         //Setting RecyclerViews------------------------
         inProgressRecyclerAdapter = TaskRecyclerAdapter(
             viewModel.getInProgressTasks(),
-            TaskRecyclerAdapter.TaskRecyclerType.PROGRESS
+            TaskRecyclerAdapter.TaskRecyclerType.PROGRESS,
+            listener
         )
 
         doneRecyclerAdapter = TaskRecyclerAdapter(
             viewModel.getDoneTasks(),
-            TaskRecyclerAdapter.TaskRecyclerType.DONE
+            TaskRecyclerAdapter.TaskRecyclerType.DONE,
+            listener
         )
 
         binding.tasksInProgressList.adapter = inProgressRecyclerAdapter
