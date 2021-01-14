@@ -83,7 +83,7 @@ class AddTaskFragment : Fragment() {
 
             viewModel.addTask(task)
             Toast.makeText(context, "Task was added", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_addTaskFragment_to_homeFragment)
+            findNavController().navigate(R.id.action_addTaskFragment_to_taskViewFragment)
         }
 
         return binding.root
