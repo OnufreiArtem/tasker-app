@@ -44,6 +44,7 @@
 
     <style name="Theme.Tasker.EditText" parent="Theme.Tasker">
         <item name="android:textColor">@color/dark_blue</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="Theme.Tasker.ArchiveItem" parent="Theme.Tasker">
