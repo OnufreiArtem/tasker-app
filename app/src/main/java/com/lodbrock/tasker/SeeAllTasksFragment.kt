@@ -28,6 +28,21 @@ class SeeAllTasksFragment : Fragment() {
     ): View {
         binding = FragmentSeeAllTasksBinding.inflate(layoutInflater, container, false)
 
+        registerObservables()
+
+        binding.taskArchiveRecycler.adapter = taskArchiveAdapter
+
+        binding.applandeoCalendar.setOnDayClickListener {
+            val date = YearDayMonth.fromCalendar(it.calendar)
+            viewModel.switchDayLiveData(date)
+            val status = "All tasks for ${date.month+1}.${date.day}"
+            binding.archiveStatusLabel.text = status
+        }
+
+        return binding.root
+    }
+
+    private fun registerObservables() {
         viewModel.getAllTasksForToday().observe(viewLifecycleOwner, { list ->
             taskArchiveAdapter.setTaskList(list)
             if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
@@ -43,16 +58,6 @@ class SeeAllTasksFragment : Fragment() {
             binding.applandeoCalendar.setEvents(events)
         })
 
-        binding.taskArchiveRecycler.adapter = taskArchiveAdapter
-
-        binding.applandeoCalendar.setOnDayClickListener {
-            val date = YearDayMonth.fromCalendar(it.calendar)
-            viewModel.switchDayLiveData(date)
-            val status = "All tasks for ${date.month+1}.${date.day}"
-            binding.archiveStatusLabel.text = status
-        }
-
-        return binding.root
     }
 
     private fun hideEmptyListHint() {
