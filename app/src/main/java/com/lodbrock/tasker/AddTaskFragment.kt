@@ -2,22 +2,20 @@ package com.lodbrock.tasker
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentAddTaskBinding
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.AddTaskViewModel
-import com.lodbrock.tasker.viewmodels.HomeViewModel
 import java.util.*
 
 class AddTaskFragment : Fragment() {
@@ -32,7 +30,6 @@ class AddTaskFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentAddTaskBinding.inflate(inflater, container, false)
 
         configSwitch()
