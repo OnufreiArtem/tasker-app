@@ -99,10 +99,6 @@ class HomeFragment : Fragment() {
             inProgressRecyclerAdapter.setTasks(viewModel.getInProgressTasks())
             doneRecyclerAdapter.setTasks(viewModel.getDoneTasks())
 
-            if(inProgressRecyclerAdapter.itemCount == 0 && doneRecyclerAdapter.itemCount == 0) {
-
-            }
-
             if(inProgressRecyclerAdapter.itemCount != 0) {
                 binding.inProgressTasksStatus.visibility = View.GONE
             } else {
