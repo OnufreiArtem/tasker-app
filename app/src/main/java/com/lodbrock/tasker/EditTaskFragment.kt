@@ -11,20 +11,25 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentEditTaskBinding
 import com.lodbrock.tasker.util.YearDayMonth
-import com.lodbrock.tasker.viewmodels.AddTaskViewModel
-import java.util.*
+import com.lodbrock.tasker.viewmodels.EditTaskViewModel
+import java.text.DateFormat
 
 class EditTaskFragment : Fragment() {
 
     private lateinit var binding : FragmentEditTaskBinding
 
-    private val viewModel : AddTaskViewModel by activityViewModels()
+    private val viewModel : EditTaskViewModel by activityViewModels()
+
+    private val args: EditTaskFragmentArgs by navArgs()
 
     private var dateToAddTask = MutableLiveData<YearDayMonth>(null)
+
+    private var task : Task? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,16 +37,35 @@ class EditTaskFragment : Fragment() {
     ): View {
         binding = FragmentEditTaskBinding.inflate(inflater, container, false)
 
-        configSwitch()
-
         dateToAddTask.observe(viewLifecycleOwner, {
             val selectedDate = dateToAddTask.value
-            if(selectedDate != null) {
-                val btnText =
-                    "${selectedDate.year}:${selectedDate.month}:${selectedDate.day}"
+            selectedDate?.let {
+                val btnText = DateFormat.getInstance().format(selectedDate.toCalendar().time)
                 binding.selectDateBtn.text = btnText
             }
         })
+
+        viewModel.initTask(args.taskToEditId)
+
+        viewModel.getSelectedTask().observe(viewLifecycleOwner) {
+            it?.let { task ->
+                binding.apply {
+                    taskEditTitle.text.clear()
+                    taskEditTitle.text.append(task.title)
+                    taskEditDescription.text.clear()
+                    taskEditDescription.text.append(task.description)
+                    switchIsTaskDone.isChecked = task.done
+                    dateToAddTask.value = task.setToDate
+                }
+                this.task = task
+            } ?: run {
+                Toast.makeText(context, "Unable to find selected task", Toast.LENGTH_SHORT)
+                    .show()
+                Navigation.findNavController(binding.root).navigateUp()
+            }
+        }
+
+        configSwitch()
 
         binding.selectDateBtn.setOnClickListener{
             val date = dateToAddTask.value ?: YearDayMonth.today()
@@ -56,7 +80,7 @@ class EditTaskFragment : Fragment() {
             datePickerDialog.show()
         }
 
-        binding.addTaskBtn.setOnClickListener{
+        binding.editTaskBtn.setOnClickListener{
 
             var mDateToAdd = dateToAddTask.value
 
@@ -68,22 +92,24 @@ class EditTaskFragment : Fragment() {
                 activity?.let {
                     val builder = AlertDialog.Builder(it)
                     builder.apply {
-                        setPositiveButton("OK") { _, _ -> {} }
+                        setPositiveButton("OK") { _, _ -> run{} }
                         setMessage("You need to specify date for your task")
                     }
                 }?.show()
                 return@setOnClickListener
             }
 
-            val task = Task(
-                title = binding.titleEdit.text.toString(),
-                description = binding.descriptionEdit.text.toString(),
-                setToDate = mDateToAdd
-            )
-
-            viewModel.addTask(task)
-            Toast.makeText(context, "Task was added", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_editTaskFragment_to_taskViewFragment)
+            task?.let {
+                it.apply {
+                    title = binding.taskEditTitle.text.toString()
+                    description = binding.taskEditDescription.text.toString()
+                    setToDate = mDateToAdd
+                    done = binding.switchIsTaskDone.isChecked
+                }
+                viewModel.editTask(it)
+                Toast.makeText(context, "Task was edited", Toast.LENGTH_SHORT).show()
+                Navigation.findNavController(binding.root).navigateUp()
+            }
         }
 
         return binding.root
@@ -93,8 +119,6 @@ class EditTaskFragment : Fragment() {
         binding.switchIsCurrentDate.setOnCheckedChangeListener {
                 _, isChecked -> binding.selectDateBtn.isEnabled = !isChecked
         }
-
-        binding.switchIsCurrentDate.isChecked = true
     }
 
 
