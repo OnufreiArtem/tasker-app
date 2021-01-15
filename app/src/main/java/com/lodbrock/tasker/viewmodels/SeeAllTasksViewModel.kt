@@ -1,13 +1,11 @@
 package com.lodbrock.tasker.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.data.repositories.AppRepository
 import com.lodbrock.tasker.util.YearDayMonth
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class SeeAllTasksViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,6 +25,17 @@ class SeeAllTasksViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getAllEventDates(): LiveData<List<Calendar>> {
         return _allEventDates
+    }
+
+    fun addTask(task: Task) {
+        viewModelScope.launch { repository.addTasks(task) }
+    }
+
+    fun deleteTask(task: Task) : Boolean {
+        viewModelScope.launch {
+            repository.deleteTask(task)
+        }
+        return true
     }
 
     private val allTasksObserver : Observer<List<Task>> = Observer(){
