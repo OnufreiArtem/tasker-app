@@ -35,12 +35,15 @@ class TaskViewFragment : Fragment() {
 
         viewModel.getSelectedTask().observe(viewLifecycleOwner, { task ->
             task?.let {
-                binding.taskViewTitle.text.clear()
-                binding.taskViewTitle.text.append(it.title)
-                binding.taskViewDescription.text.clear()
-                binding.taskViewDescription.text.append(it.description)
                 val formattedDate = DateFormat.getDateInstance().format(it.setToDate.toCalendar().time)
-                binding.taskViewDate.text = "Set to: " + formattedDate
+                binding.apply {
+                    taskViewTitle.text.clear()
+                    taskViewTitle.text.append(it.title)
+                    taskViewDescription.text.clear()
+                    taskViewDescription.text.append(it.description)
+                    taskViewDate.text = "Set to: " + formattedDate
+                }
+
             } ?: run {
                 Toast.makeText(context, "Unable to find selected task", Toast.LENGTH_SHORT)
                     .show()
