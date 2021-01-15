@@ -72,9 +72,20 @@
                     android:id="@+id/tasks_in_progress_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="26dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/task_item" />
+
+                <TextView
+                    android:id="@+id/in_progress_tasks_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No Tasks To Do Today"
+                    android:textSize="24sp"
+                    android:textColor="?attr/semiTransparentHintColor"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="24dp"/>
 
                 <TextView
                     android:id="@+id/tasks_done_list_title"
@@ -88,9 +99,21 @@
                     android:id="@+id/tasks_done_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="50dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/task_item" />
+
+                <TextView
+                    android:id="@+id/done_tasks_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No Tasks Done For Today"
+                    android:textSize="24sp"
+                    android:textColor="?attr/semiTransparentHintColor"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="24dp"/>
+
 
             </LinearLayout>
 

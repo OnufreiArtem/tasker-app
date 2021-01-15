@@ -99,6 +99,22 @@ class HomeFragment : Fragment() {
             inProgressRecyclerAdapter.setTasks(viewModel.getInProgressTasks())
             doneRecyclerAdapter.setTasks(viewModel.getDoneTasks())
 
+            if(inProgressRecyclerAdapter.itemCount == 0 && doneRecyclerAdapter.itemCount == 0) {
+
+            }
+
+            if(inProgressRecyclerAdapter.itemCount != 0) {
+                binding.inProgressTasksStatus.visibility = View.GONE
+            } else {
+                binding.inProgressTasksStatus.visibility = View.VISIBLE
+            }
+
+            if(doneRecyclerAdapter.itemCount != 0) {
+                binding.doneTasksStatus.visibility = View.GONE
+            } else {
+                binding.doneTasksStatus.visibility = View.VISIBLE
+            }
+
             inProgressRecyclerAdapter.notifyDataSetChanged()
             doneRecyclerAdapter.notifyDataSetChanged()
             Log.i("HomeFragment", "List changed")
