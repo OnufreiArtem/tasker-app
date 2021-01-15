@@ -18,6 +18,7 @@ import com.lodbrock.tasker.databinding.FragmentEditTaskBinding
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.EditTaskViewModel
 import java.text.DateFormat
+import java.util.*
 
 class EditTaskFragment : Fragment() {
 
@@ -40,7 +41,7 @@ class EditTaskFragment : Fragment() {
         dateToAddTask.observe(viewLifecycleOwner, {
             val selectedDate = dateToAddTask.value
             selectedDate?.let {
-                val btnText = DateFormat.getInstance().format(selectedDate.toCalendar().time)
+                val btnText = DateFormat.getDateInstance().format(selectedDate.toCalendar().time)
                 binding.selectDateBtn.text = btnText
             }
         })
