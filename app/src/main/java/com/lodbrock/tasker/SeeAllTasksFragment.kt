@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
 import com.applandeo.materialcalendarview.EventDay
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
@@ -38,7 +37,7 @@ class SeeAllTasksFragment : Fragment() {
         listener = object : ItemClickListener {
             override fun onClick(task: Task, position: Int) {
                 val action = SeeAllTasksFragmentDirections
-                    .actionSeeAllTasksFragmentToTaskViewFragment(taskToView = task)
+                    .actionSeeAllTasksFragmentToTaskViewFragment(taskToViewId = task.id ?: -1)
                 Navigation.findNavController(binding.root).navigate(action)
             }
         }

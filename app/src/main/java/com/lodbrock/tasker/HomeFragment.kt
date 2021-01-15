@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
 
         val listener = object : ItemClickListener {
             override fun onClick(task: Task, position: Int) {
-                val action = HomeFragmentDirections.actionHomeFragmentToTaskViewFragment(task)
+                val action = HomeFragmentDirections.actionHomeFragmentToTaskViewFragment(task.id ?: -1)
                 Navigation.findNavController(binding.root).navigate(action)
             }
         }
