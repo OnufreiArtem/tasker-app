@@ -10,6 +10,7 @@ import com.lodbrock.tasker.R
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
+import java.lang.Exception
 
 class TaskArchiveRecyclerAdapter(private var taskList : List<Task>,
                                  private var itemClickListener: ItemClickListener? = null)
@@ -31,6 +32,14 @@ class TaskArchiveRecyclerAdapter(private var taskList : List<Task>,
 
     override fun getItemCount(): Int {
         return taskList.size
+    }
+
+    fun getTaskAtPosition(position: Int) : Task? {
+        return try {
+            taskList[position]
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
