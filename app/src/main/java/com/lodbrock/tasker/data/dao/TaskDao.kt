@@ -13,6 +13,9 @@ interface TaskDao {
     @Query("SELECT * FROM task")
     fun allTasks() : LiveData<List<Task>>
 
+    @Query( "SELECT * FROM task WHERE id=:id LIMIT 1")
+    fun taskById(id : Long) : LiveData<Task?>
+
     @Query("SELECT * FROM task WHERE setToDate = :date")
     fun tasksForDate(date: YearDayMonth) : LiveData<List<Task>>
 

@@ -3,6 +3,7 @@ package com.lodbrock.tasker.data.repositories
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.lodbrock.tasker.data.database.AppDatabase
 import com.lodbrock.tasker.data.model.Task
@@ -24,11 +25,37 @@ class AppRepository(context: Context) {
         return taskDao?.tasksForDate(date) ?: MutableLiveData(listOf())
     }
 
+    fun getTaskById(id: Long) : LiveData<Task?>{
+        var found = false
+        val taskLiveData = MediatorLiveData<Task?>()
+
+        taskDao?.let {
+            taskLiveData.addSource(taskDao.taskById(id)) { taskLiveData.value = it }
+            taskLiveData.value?.let { found = true }
+
+        } ?:
+
+        Log.d(tag, if(found) "Found ${taskLiveData.value}" else "Unable to find task with id=$id")
+
+        return taskLiveData
+    }
+
+
     suspend fun addTasks(task: Task){
         taskDao?.let {
             it.addTask(task)
             Log.d(tag, "Added $task")
         } ?: Log.d(tag, "Unable add $task")
+    }
+
+
+    suspend fun editTask(task: Task) {
+        taskDao?.let {
+            task.modifiedAt = Calendar.getInstance()
+            it.updateTask(task)
+            Log.d(tag, "Edited to $task")
+        } ?: Log.d(tag, "Unable to edit $task")
+
     }
 
     suspend fun makeTaskDone(task: Task){
