@@ -41,6 +41,7 @@ class TaskViewFragment : Fragment() {
                     taskViewTitle.text.append(it.title)
                     taskViewDescription.text.clear()
                     taskViewDescription.text.append(it.description)
+                    viewSwitchIsTaskDone.isChecked = task.done
                     taskViewDate.text = "Set to: " + formattedDate
                 }
 
