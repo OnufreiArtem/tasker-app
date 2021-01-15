@@ -40,7 +40,7 @@ class TaskViewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.addTaskFragment -> {
+            R.id.editTaskFragment -> {
                 Navigation.findNavController(binding.root)
                     .navigate(R.id.action_taskViewFragment_to_addTaskFragment)
                 true

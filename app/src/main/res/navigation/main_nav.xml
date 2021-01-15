@@ -20,12 +20,12 @@
             app:exitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
-        android:id="@+id/addTaskFragment"
-        android:name="com.lodbrock.tasker.AddTaskFragment"
+        android:id="@+id/editTaskFragment"
+        android:name="com.lodbrock.tasker.EditTaskFragment"
         android:label="Add Task"
-        tools:layout="@layout/fragment_add_task" >
+        tools:layout="@layout/fragment_edit_task" >
         <action
-            android:id="@+id/action_addTaskFragment_to_taskViewFragment"
+            android:id="@+id/action_editTaskFragment_to_taskViewFragment"
             app:destination="@id/taskViewFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim"/>
@@ -46,7 +46,7 @@
         tools:layout="@layout/fragment_task_view" >
         <action
             android:id="@+id/action_taskViewFragment_to_addTaskFragment"
-            app:destination="@id/addTaskFragment"
+            app:destination="@id/editTaskFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
