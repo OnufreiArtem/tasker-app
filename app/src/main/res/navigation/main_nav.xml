@@ -29,6 +29,9 @@
             app:destination="@id/taskViewFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim"/>
+        <argument
+            android:name="taskToEditId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/seeAllTasksFragment"
@@ -45,14 +48,13 @@
         android:label="View Task"
         tools:layout="@layout/fragment_task_view" >
         <action
-            android:id="@+id/action_taskViewFragment_to_addTaskFragment"
+            android:id="@+id/action_taskViewFragment_to_editTaskFragment"
             app:destination="@id/editTaskFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
-            android:name="taskToView"
-            app:argType="com.lodbrock.tasker.data.model.Task"
-            app:nullable="true" />
+            android:name="taskToViewId"
+            app:argType="long" />
     </fragment>
 
 </navigation>
