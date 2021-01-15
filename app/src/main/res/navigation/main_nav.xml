@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/editTaskFragment"
         android:name="com.lodbrock.tasker.EditTaskFragment"
-        android:label="Add Task"
+        android:label="Edit Task"
         tools:layout="@layout/fragment_edit_task" >
         <action
             android:id="@+id/action_editTaskFragment_to_taskViewFragment"
