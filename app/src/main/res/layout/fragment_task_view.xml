@@ -52,6 +52,20 @@
             android:textColor="@color/dark_blue"
             android:textSize="24sp" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/view_switch_is_task_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:focusable="false"
+            android:clickable="false"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/dark_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description_edit" />
+
+
         <TextView
             android:id="@+id/task_view_date"
             android:layout_width="match_parent"
