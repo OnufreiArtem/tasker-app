@@ -48,7 +48,7 @@
                 android:layout_gravity="center"
                 android:text="All tasks for 12.01"
                 android:textColor="@color/white"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:padding="12dp"
                 android:textAlignment="center" />
 
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="No Tasks for this date"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textColor="?attr/semiTransparentHintColor"
             android:layout_gravity="center"
             android:textAlignment="center"
