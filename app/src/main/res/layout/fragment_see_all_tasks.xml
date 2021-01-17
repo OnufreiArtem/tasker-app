@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -19,8 +18,7 @@
                 <CalendarView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-            -->
-            <com.applandeo.materialcalendarview.CalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+            <com.applandeo.materialcalendarview.CalendarView
                 android:id="@+id/applandeoCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,6 +31,15 @@
                 app:selectionLabelColor="@color/white"
                 app:todayLabelColor="?attr/colorAccent"
                 app:type="one_day_picker" />
+            -->
+
+            <LinearLayout
+                android:id="@+id/calendarContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

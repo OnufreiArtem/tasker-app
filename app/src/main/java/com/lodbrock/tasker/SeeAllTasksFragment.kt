@@ -7,15 +7,18 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.data.model.Task
+import com.lodbrock.tasker.databinding.CalendarLayoutBinding
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskArchiveRecyclerAdapter
@@ -24,6 +27,8 @@ import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
 import java.text.DateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SeeAllTasksFragment : Fragment() {
 
@@ -36,6 +41,8 @@ class SeeAllTasksFragment : Fragment() {
     private val viewModel : SeeAllTasksViewModel by activityViewModels()
 
     private lateinit var listener : ItemClickListener
+
+    private var calendarView : CalendarView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,10 +62,40 @@ class SeeAllTasksFragment : Fragment() {
         taskArchiveAdapter = TaskArchiveRecyclerAdapter(listOf(), listener)
 
         registerObservables()
+        context?.let {
+            val asyncLayoutInflater = AsyncLayoutInflater(it)
+
+            asyncLayoutInflater.inflate(R.layout.calendar_layout, container) { view, _, _ ->
+                run {
+                    calendarView = view as CalendarView
+                    binding.calendarContainer.addView(calendarView)
+                    calendarView?.setOnDayClickListener { event ->
+                        val date = YearDayMonth.fromCalendar(event.calendar)
+                        viewModel.switchDayLiveData(date)
+                        val formattedDate = DateFormat.getDateInstance().format(event.calendar.time)
+                        val status = "Tasks for $formattedDate"
+                        binding.archiveStatusLabel.text = status
+                    }
+                    viewModel.getAllEventDates().observe(viewLifecycleOwner, { dates ->
+                        val events: MutableList<EventDay> = ArrayList()
+
+                        dates.forEach { date ->
+                            events.add(EventDay(date, R.drawable.ic_circle, R.color.red_200))
+                        }
+
+                        calendarView?.setEvents(events)
+                    })
+                    println("Finished inflation")
+                }
+            }
+
+
+        }
+
 
         binding.taskArchiveRecycler.adapter = taskArchiveAdapter
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.taskArchiveRecycler)
-
+/*
         binding.applandeoCalendar.setOnDayClickListener {
             val date = YearDayMonth.fromCalendar(it.calendar)
             viewModel.switchDayLiveData(date)
@@ -66,9 +103,13 @@ class SeeAllTasksFragment : Fragment() {
             val status = "Tasks for $formattedDate"
             binding.archiveStatusLabel.text = status
         }
-
+*/
         binding.addFloatingBtn.setOnClickListener {
-            val dateSelectedCalendar = binding.applandeoCalendar.firstSelectedDate
+            var dateSelectedCalendar = Calendar.getInstance()
+            calendarView?.let {
+                dateSelectedCalendar = it.firstSelectedDate
+            }
+            //val dateSelectedCalendar = binding.applandeoCalendar.firstSelectedDate
             val dateText = DateFormat.getDateInstance().format(dateSelectedCalendar.time)
             val dateSelected = YearDayMonth.fromCalendar(
                 dateSelectedCalendar
@@ -99,7 +140,7 @@ class SeeAllTasksFragment : Fragment() {
             taskArchiveAdapter.setTaskList(list)
             if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
         })
-
+/*
         viewModel.getAllEventDates().observe(viewLifecycleOwner, { dates ->
             val events: MutableList<EventDay> = ArrayList()
 
@@ -109,7 +150,7 @@ class SeeAllTasksFragment : Fragment() {
 
             binding.applandeoCalendar.setEvents(events)
         })
-
+*/
     }
 
     private fun hideEmptyListHint() {
