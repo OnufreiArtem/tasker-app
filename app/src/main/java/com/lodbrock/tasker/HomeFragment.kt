@@ -74,14 +74,13 @@ class HomeFragment : Fragment() {
         //------------------------------------------------------>
 
         binding.addFloatingBtn.setOnClickListener {
-            //Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_addTaskFragment)
             taskDialog.showTaskDialog(
                 "Add Task For Today",
                 "Add",
                 object : TaskDialog.OnDialogClickListener{
                     override fun onClick(task: Task?) {
                         task?.let {
-                            viewModel.addTask(task)
+                            viewModel.addTask(it)
                         }
                     }
                 },
