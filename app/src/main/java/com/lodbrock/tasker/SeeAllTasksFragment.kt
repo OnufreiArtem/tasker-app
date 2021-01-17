@@ -19,6 +19,7 @@ import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskArchiveRecyclerAdapter
+import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
@@ -27,6 +28,8 @@ import java.text.DateFormat
 class SeeAllTasksFragment : Fragment() {
 
     private lateinit var binding : FragmentSeeAllTasksBinding
+
+    private lateinit var taskDialog: TaskDialog
 
     private lateinit var taskArchiveAdapter : TaskArchiveRecyclerAdapter
 
@@ -39,6 +42,7 @@ class SeeAllTasksFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSeeAllTasksBinding.inflate(layoutInflater, container, false)
+        taskDialog = TaskDialog(activity, layoutInflater)
 
         listener = object : ItemClickListener {
             override fun onClick(task: Task, position: Int) {
@@ -61,6 +65,28 @@ class SeeAllTasksFragment : Fragment() {
             val formattedDate = DateFormat.getDateInstance().format(it.calendar.time)
             val status = "Tasks for $formattedDate"
             binding.archiveStatusLabel.text = status
+        }
+
+        binding.addFloatingBtn.setOnClickListener {
+            val dateSelected = YearDayMonth.fromCalendar(
+                binding.applandeoCalendar.firstSelectedDate
+            )
+
+            taskDialog.showTaskDialog(
+                "Add Task For Today",
+                "Add",
+                object : TaskDialog.OnDialogClickListener{
+                    override fun onClick(task: Task?) {
+                        task?.let {
+                            it.setToDate = dateSelected
+                            viewModel.addTask(it)
+                        }
+                    }
+                },
+                null,
+                YearDayMonth.compare(YearDayMonth.today(), dateSelected) > 0
+            )
+
         }
 
         return binding.root
