@@ -68,12 +68,14 @@ class SeeAllTasksFragment : Fragment() {
         }
 
         binding.addFloatingBtn.setOnClickListener {
+            val dateSelectedCalendar = binding.applandeoCalendar.firstSelectedDate
+            val dateText = DateFormat.getDateInstance().format(dateSelectedCalendar.time)
             val dateSelected = YearDayMonth.fromCalendar(
-                binding.applandeoCalendar.firstSelectedDate
+                dateSelectedCalendar
             )
 
             taskDialog.showTaskDialog(
-                "Add Task For Today",
+                "Add Task For $dateText",
                 "Add",
                 object : TaskDialog.OnDialogClickListener{
                     override fun onClick(task: Task?) {
