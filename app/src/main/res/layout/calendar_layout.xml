@@ -4,15 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/applandeoCalendar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
     app:datePicker="true"
     app:daysLabelsColor="@color/dark_blue"
-    app:eventsEnabled="true"
+    app:eventsEnabled="false"
     app:headerColor="@color/white"
     app:headerLabelColor="@color/dark_blue"
     app:selectionColor="@color/blue_700"
     app:selectionLabelColor="@color/white"
     app:todayLabelColor="?attr/colorAccent"
-    app:type="one_day_picker">
-
-</com.applandeo.materialcalendarview.CalendarView>
+    app:type="one_day_picker" />

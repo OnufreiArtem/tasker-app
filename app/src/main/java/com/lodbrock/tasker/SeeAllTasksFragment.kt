@@ -1,6 +1,7 @@
 package com.lodbrock.tasker
 
 import android.os.Bundle
+import android.util.Xml
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -18,7 +19,6 @@ import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.data.model.Task
-import com.lodbrock.tasker.databinding.CalendarLayoutBinding
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskArchiveRecyclerAdapter
@@ -26,9 +26,11 @@ import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
+import org.xmlpull.v1.XmlPullParser
 import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class SeeAllTasksFragment : Fragment() {
 
@@ -65,10 +67,11 @@ class SeeAllTasksFragment : Fragment() {
         context?.let {
             val asyncLayoutInflater = AsyncLayoutInflater(it)
 
-            asyncLayoutInflater.inflate(R.layout.calendar_layout, container) { view, _, _ ->
+            asyncLayoutInflater.inflate(R.layout.calendar_layout, binding.calendarContainer) { view, _, _ ->
                 run {
                     calendarView = view as CalendarView
                     binding.calendarContainer.addView(calendarView)
+                    binding.calendarContainer.recomputeViewAttributes(calendarView)
                     calendarView?.setOnDayClickListener { event ->
                         val date = YearDayMonth.fromCalendar(event.calendar)
                         viewModel.switchDayLiveData(date)
@@ -95,21 +98,13 @@ class SeeAllTasksFragment : Fragment() {
 
         binding.taskArchiveRecycler.adapter = taskArchiveAdapter
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.taskArchiveRecycler)
-/*
-        binding.applandeoCalendar.setOnDayClickListener {
-            val date = YearDayMonth.fromCalendar(it.calendar)
-            viewModel.switchDayLiveData(date)
-            val formattedDate = DateFormat.getDateInstance().format(it.calendar.time)
-            val status = "Tasks for $formattedDate"
-            binding.archiveStatusLabel.text = status
-        }
-*/
+
         binding.addFloatingBtn.setOnClickListener {
             var dateSelectedCalendar = Calendar.getInstance()
-            calendarView?.let {
-                dateSelectedCalendar = it.firstSelectedDate
+            calendarView?.let { calendarView ->
+                dateSelectedCalendar = calendarView.firstSelectedDate
             }
-            //val dateSelectedCalendar = binding.applandeoCalendar.firstSelectedDate
+
             val dateText = DateFormat.getDateInstance().format(dateSelectedCalendar.time)
             val dateSelected = YearDayMonth.fromCalendar(
                 dateSelectedCalendar
@@ -118,7 +113,7 @@ class SeeAllTasksFragment : Fragment() {
             taskDialog.showTaskDialog(
                 "Add Task For $dateText",
                 "Add",
-                object : TaskDialog.OnDialogClickListener{
+                object : TaskDialog.OnDialogClickListener {
                     override fun onClick(task: Task?) {
                         task?.let {
                             it.setToDate = dateSelected
@@ -140,17 +135,6 @@ class SeeAllTasksFragment : Fragment() {
             taskArchiveAdapter.setTaskList(list)
             if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
         })
-/*
-        viewModel.getAllEventDates().observe(viewLifecycleOwner, { dates ->
-            val events: MutableList<EventDay> = ArrayList()
-
-            dates.forEach { date ->
-                events.add(EventDay(date, R.drawable.ic_circle, R.color.red_200))
-            }
-
-            binding.applandeoCalendar.setEvents(events)
-        })
-*/
     }
 
     private fun hideEmptyListHint() {
