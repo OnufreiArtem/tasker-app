@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.snackbar.Snackbar
+import com.lodbrock.tasker.aircalendar.OnDaySelectionListener
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
@@ -44,8 +45,6 @@ class SeeAllTasksFragment : Fragment() {
 
     private lateinit var listener : ItemClickListener
 
-    private var calendarView : CalendarView? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -64,46 +63,18 @@ class SeeAllTasksFragment : Fragment() {
         taskArchiveAdapter = TaskArchiveRecyclerAdapter(listOf(), listener)
 
         registerObservables()
-        context?.let {
-            val asyncLayoutInflater = AsyncLayoutInflater(it)
 
-            asyncLayoutInflater.inflate(R.layout.calendar_layout, binding.calendarContainer) { view, _, _ ->
-                run {
-                    calendarView = view as CalendarView
-                    binding.calendarContainer.addView(calendarView)
-                    binding.calendarContainer.recomputeViewAttributes(calendarView)
-                    calendarView?.setOnDayClickListener { event ->
-                        val date = YearDayMonth.fromCalendar(event.calendar)
-                        viewModel.switchDayLiveData(date)
-                        val formattedDate = DateFormat.getDateInstance().format(event.calendar.time)
-                        val status = "Tasks for $formattedDate"
-                        binding.archiveStatusLabel.text = status
-                    }
-                    viewModel.getAllEventDates().observe(viewLifecycleOwner, { dates ->
-                        val events: MutableList<EventDay> = ArrayList()
-
-                        dates.forEach { date ->
-                            events.add(EventDay(date, R.drawable.ic_circle, R.color.red_200))
-                        }
-
-                        calendarView?.setEvents(events)
-                    })
-                    println("Finished inflation")
-                }
+        binding.airCalendar.adapter.setDayClickListener( object : OnDaySelectionListener {
+            override fun onDaySelected(calendar: Calendar) {
+                viewModel.switchDayLiveData(YearDayMonth.fromCalendar(calendar))
             }
-
-
-        }
-
+        })
 
         binding.taskArchiveRecycler.adapter = taskArchiveAdapter
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.taskArchiveRecycler)
 
         binding.addFloatingBtn.setOnClickListener {
-            var dateSelectedCalendar = Calendar.getInstance()
-            calendarView?.let { calendarView ->
-                dateSelectedCalendar = calendarView.firstSelectedDate
-            }
+            val dateSelectedCalendar = binding.airCalendar.selectedDay
 
             val dateText = DateFormat.getDateInstance().format(dateSelectedCalendar.time)
             val dateSelected = YearDayMonth.fromCalendar(
@@ -134,6 +105,11 @@ class SeeAllTasksFragment : Fragment() {
         viewModel.getAllTasksForToday().observe(viewLifecycleOwner, { list ->
             taskArchiveAdapter.setTaskList(list)
             if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
+        })
+
+        viewModel.getAllEventDates().observe(viewLifecycleOwner, { list ->
+            binding.airCalendar.adapter.setEventList(list.map { YearDayMonth.fromCalendar(it) })
+            binding.airCalendar.adapter.notifyDataSetChanged()
         })
     }
 
