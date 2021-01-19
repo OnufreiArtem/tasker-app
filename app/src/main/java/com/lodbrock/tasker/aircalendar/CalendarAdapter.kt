@@ -50,18 +50,6 @@ class CalendarAdapter(
         this.cursor =  cursor
     }
 
-    fun addEvent(yearDayMonth: YearDayMonth) {
-        this.events.add(yearDayMonth)
-    }
-
-    fun removeEvent(yearDayMonth: YearDayMonth) {
-        this.events.remove(yearDayMonth)
-    }
-
-    fun removeAllEvents() {
-        this.events.clear()
-    }
-
     private var prevBinding : AircalendarDayLayoutBinding? = null
     private var prevSelectedIndex: Int? = null
     private var prevTextColorRes: Int = 0
@@ -95,10 +83,12 @@ class CalendarAdapter(
              prevSelectedIndex = position
         } else if(isToday) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.red_500))
 
-        if (events.contains(dates[position]))
+        if (events.contains(dates[position])) {
             binding.aircalendarDayImg.setImageResource(R.drawable.ic_circle)
-        else
+        }
+        else {
             binding.aircalendarDayImg.setImageResource(0)
+        }
 
         return view
     }
