@@ -7,16 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.lodbrock.tasker.R
+import com.lodbrock.tasker.databinding.AircalendarDayLayoutBinding
 import com.lodbrock.tasker.util.YearDayMonth
 import java.util.*
 
 class CalendarAdapter(
     private val ctx: Context,
-    private val targetMonth: Int,
+    private var cursor: Calendar,
     private var dates: MutableList<YearDayMonth>,
     private var onDayClickListener: OnDaySelectionListener? = null,
 ) : ArrayAdapter<YearDayMonth>(ctx, R.layout.aircalendar_day_layout, dates) {
@@ -24,9 +23,9 @@ class CalendarAdapter(
     private var inflater: LayoutInflater = LayoutInflater.from(context)
     private var events: MutableList<YearDayMonth> = mutableListOf()
 
-    private var selectedDate : Calendar? = null
+    private var selectedDate : Calendar = Calendar.getInstance()
 
-    fun setDayClickListener(listener : OnDaySelectionListener) {
+    fun setOnDayClickListener(listener : OnDaySelectionListener) {
         onDayClickListener = listener
     }
 
@@ -34,6 +33,8 @@ class CalendarAdapter(
         selectedDate = calendar
         notifyDataSetChanged()
     }
+
+    fun getSelectedDate() = selectedDate
 
     fun setDateList(dates: List<YearDayMonth>) {
         this.dates.clear()
@@ -43,6 +44,10 @@ class CalendarAdapter(
     fun setEventList(events: List<YearDayMonth>) {
         this.events.clear()
         this.events.addAll(events)
+    }
+
+    fun setCursor(cursor: Calendar){
+        this.cursor =  cursor
     }
 
     fun addEvent(yearDayMonth: YearDayMonth) {
@@ -57,74 +62,75 @@ class CalendarAdapter(
         this.events.clear()
     }
 
-    private var lastSelectedView: View? = null
-    private var lastSelectedItemBcg: ImageView? = null
-    private var lastSelectedItemText: TextView? = null
-    private var lastTextColorRes: Int = 0
+    private var prevBinding : AircalendarDayLayoutBinding? = null
+    private var prevSelectedIndex: Int? = null
+    private var prevTextColorRes: Int = 0
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-
         val view = convertView
             ?: inflater.inflate(R.layout.aircalendar_day_layout, parent, false)
 
-        val label = view.findViewById<TextView>(R.id.aircalendar_day_text)
-        val image = view.findViewById<ImageView>(R.id.aircalendar_day_img)
+        val binding = AircalendarDayLayoutBinding.bind(view)
 
-        label.text = dates[position].day.toString()
+        binding.aircalendarDayText.text = dates[position].day.toString()
 
-        if (YearDayMonth.compare(YearDayMonth.today(), dates[position]) == 0) {
-            label.setTextColor(ctx.resources.getColor(R.color.red_500))
+        val isSelected = YearDayMonth.compare(dates[position], YearDayMonth.fromCalendar(selectedDate)) == 0
+        val isIn = dates[position].month == cursor.get(Calendar.MONTH) && dates[position].year == cursor.get(Calendar.YEAR)
+        val isToday = YearDayMonth.compare(YearDayMonth.today(), dates[position]) == 0
+
+        binding.daySelectedBackground.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        if(!isIn) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.transparent_grey))
+        else {
+             view.setOnClickListener {
+                selectDayView(binding, position, dates[position].toCalendar())
+             }
+            binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.dark_blue))
         }
 
-        selectedDate?.let {
-            if(dates[position] == YearDayMonth.fromCalendar(it)) {
-                drawSelectedDate(view)
-            }
-        }
-
+         if(isSelected) {
+             binding.aircalendarDayText.setTextColor(Color.WHITE)
+             drawAsSelectedDate(binding, position)
+             binding.daySelectedBackground.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
+             prevSelectedIndex = position
+        } else if(isToday) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.red_500))
 
         if (events.contains(dates[position]))
-            image.setImageResource(R.drawable.ic_circle)
-
-        if (dates[position].month != targetMonth) {
-            label.setTextColor(ctx.resources.getColor(R.color.transparent_grey))
-        } else {
-            view.setOnClickListener {
-                selectDayView(view, dates[position].toCalendar())
-            }
-        }
+            binding.aircalendarDayImg.setImageResource(R.drawable.ic_circle)
+        else
+            binding.aircalendarDayImg.setImageResource(0)
 
         return view
     }
 
-    private fun selectDayView(view: View, selectedDate: Calendar? = null) {
+    private fun selectDayView(binding: AircalendarDayLayoutBinding, currentPosition: Int, selectedDate: Calendar? = null) {
 
         selectedDate?.let {
+            this.selectedDate = selectedDate
+            notifyDataSetChanged()
             onDayClickListener?.onDaySelected(selectedDate)
         }
-
-        drawSelectedDate(view)
+        drawAsSelectedDate(binding, currentPosition)
     }
 
-    private fun drawSelectedDate(view: View) {
+    private fun drawAsSelectedDate(binding: AircalendarDayLayoutBinding, currentPosition: Int) {
         try {
-            val label = view.findViewById<TextView>(R.id.aircalendar_day_text)
-            val bcg = view.findViewById<ImageView>(R.id.daySelectedBackground)
+            prevSelectedIndex?.let { lsi ->
+                if (currentPosition == lsi) {
+                    return
 
-            lastSelectedView?.let { lsw ->
-                if (view != lsw) {
-                    lastSelectedItemBcg?.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
-                    lastSelectedItemText?.setTextColor(lastTextColorRes)
+                } else {
+                    prevBinding?.daySelectedBackground?.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
+                    prevBinding?.aircalendarDayText?.setTextColor(prevTextColorRes)
+                    prevSelectedIndex = currentPosition
                 }
             }
 
-            lastSelectedView = view
-            lastSelectedItemText = label
-            lastSelectedItemBcg = bcg
-            lastTextColorRes = label.currentTextColor
+            prevBinding = binding
+            prevTextColorRes = binding.aircalendarDayText.currentTextColor
 
-            bcg.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
-            label.setTextColor(Color.WHITE)
+            binding.daySelectedBackground.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
+            binding.aircalendarDayText.setTextColor(Color.WHITE)
 
         } catch (e: Exception) { }
     }

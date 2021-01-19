@@ -24,20 +24,16 @@ class CalendarView(context: Context, attrs: AttributeSet) : LinearLayout(context
     private lateinit var weekDaysContainer : LinearLayout
     private lateinit var monthDaysContainer : GridView
 
-    private var dayListener : OnDaySelectionListener? = null
-
     private val cursor = Calendar.getInstance()
-    var selectedDay : Calendar = cursor
-        private set
 
     val adapter = CalendarAdapter(
         context,
-        cursor.get(Calendar.MONTH),
+        cursor,
         mutableListOf()
     )
 
     init {
-        initControls();
+        initControls()
     }
 
     private fun assignUiElements() {
@@ -91,6 +87,7 @@ class CalendarView(context: Context, attrs: AttributeSet) : LinearLayout(context
 
     private fun updateDates() {
         val calendar : Calendar = cursor.clone() as Calendar
+        adapter.setCursor(cursor)
         calendar.set(Calendar.DAY_OF_MONTH, 1)
         val day = calendar.get(Calendar.DAY_OF_WEEK)
         val daysBefore = (if(day == Calendar.SUNDAY) 8 else day) - Calendar.MONDAY
@@ -101,13 +98,10 @@ class CalendarView(context: Context, attrs: AttributeSet) : LinearLayout(context
         for (i in 1..(7*6)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
             dates.add(YearDayMonth.fromCalendar(calendar))
+
         }
-
         adapter.setDateList(dates)
-
-        adapter.setSelectedDate(selectedDay)
-
-        invalidate()
+        adapter.notifyDataSetChanged()
     }
 
 }
