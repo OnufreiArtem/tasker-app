@@ -92,7 +92,6 @@ class SeeAllTasksFragment : Fragment() {
                         task?.let {
                             it.setToDate = dateSelected
                             viewModel.addTask(it)
-                            println(dateSelected.toString() + " Selected date")
                         }
                     }
                 },
