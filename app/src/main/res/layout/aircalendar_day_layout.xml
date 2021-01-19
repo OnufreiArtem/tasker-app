@@ -41,7 +41,6 @@
             android:paddingTop="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="0dp"
-            android:textColor="@color/dark_blue"
             android:textSize="16sp"
             android:typeface="normal" />
 
