@@ -9,4 +9,15 @@
     <string name="no_description_task">No description task</string>
     <string name="done_text">Done</string>
     <string name="floating_add_task_btn_desc">Round floating button with plus sign on it. Press to add new task.</string>
+    <string name="short_for_monday">Mon</string>
+    <string name="short_for_tuesday">Tue</string>
+    <string name="short_for_wednesday">Wed</string>
+    <string name="short_for_thursday">Thu</string>
+    <string name="short_for_friday">Fri</string>
+    <string name="short_for_saturday">Sat</string>
+    <string name="short_for_sunday">Sun</string>
+    <string name="aircalendar_next_page_desc">Next page</string>
+    <string name="aircalendar_prev_page_desc">Previous page</string>
+    <string name="aircalendar_selection_circle_desc">Selection circle under number</string>
+    <string name="aircalendar_cirlce_under_number_desc">Circle under number no show event</string>
 </resources>
