@@ -7,11 +7,10 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
+        
         <LinearLayout xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:context=".SeeAllTasksFragment">
 
@@ -19,15 +18,6 @@
                 android:id="@+id/airCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-
-
-            <LinearLayout
-                android:id="@+id/calendarContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
