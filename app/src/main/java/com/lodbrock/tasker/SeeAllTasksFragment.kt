@@ -29,6 +29,7 @@ import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
 import org.xmlpull.v1.XmlPullParser
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -64,9 +65,11 @@ class SeeAllTasksFragment : Fragment() {
 
         registerObservables()
 
-        binding.airCalendar.adapter.setDayClickListener( object : OnDaySelectionListener {
+        binding.airCalendar.adapter.setOnDayClickListener( object : OnDaySelectionListener {
             override fun onDaySelected(calendar: Calendar) {
                 viewModel.switchDayLiveData(YearDayMonth.fromCalendar(calendar))
+                val format = DateFormat.getDateInstance().format(calendar.time)
+                binding.archiveStatusLabel.text = "All tasks for $format"
             }
         })
 
@@ -74,7 +77,7 @@ class SeeAllTasksFragment : Fragment() {
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.taskArchiveRecycler)
 
         binding.addFloatingBtn.setOnClickListener {
-            val dateSelectedCalendar = binding.airCalendar.selectedDay
+            val dateSelectedCalendar = binding.airCalendar.adapter.getSelectedDate()
 
             val dateText = DateFormat.getDateInstance().format(dateSelectedCalendar.time)
             val dateSelected = YearDayMonth.fromCalendar(
@@ -89,6 +92,7 @@ class SeeAllTasksFragment : Fragment() {
                         task?.let {
                             it.setToDate = dateSelected
                             viewModel.addTask(it)
+                            println(dateSelected.toString() + " Selected date")
                         }
                     }
                 },
