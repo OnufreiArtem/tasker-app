@@ -60,7 +60,7 @@ class EditTaskFragment : Fragment() {
                 }
                 this.task = task
             } ?: run {
-                Toast.makeText(context, "Unable to find selected task", Toast.LENGTH_SHORT)
+                Toast.makeText(context, resources.getString(R.string.unable_to_find_sel_task), Toast.LENGTH_SHORT)
                     .show()
                 Navigation.findNavController(binding.root).navigateUp()
             }
@@ -93,8 +93,8 @@ class EditTaskFragment : Fragment() {
                 activity?.let {
                     val builder = AlertDialog.Builder(it)
                     builder.apply {
-                        setPositiveButton("OK") { _, _ -> run{} }
-                        setMessage("You need to specify date for your task")
+                        setPositiveButton(resources.getString(R.string.add_text)) { _, _ -> run{} }
+                        setMessage(resources.getString(R.string.need_date_for_task))
                     }
                 }?.show()
                 return@setOnClickListener
@@ -108,7 +108,10 @@ class EditTaskFragment : Fragment() {
                     done = binding.switchIsTaskDone.isChecked
                 }
                 viewModel.editTask(it)
-                Toast.makeText(context, "Task was edited", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    resources.getString(R.string.task_edited_text),
+                    Toast.LENGTH_SHORT)
+                    .show()
                 Navigation.findNavController(binding.root).navigateUp()
             }
         }

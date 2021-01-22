@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.lodbrock.tasker.HomeFragment"
-        android:label="Home"
+        android:label="@string/home_page_title"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_seeAllTasksFragment"
@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/editTaskFragment"
         android:name="com.lodbrock.tasker.EditTaskFragment"
-        android:label="Edit Task"
+        android:label="@string/task_edit_page_title"
         tools:layout="@layout/fragment_edit_task" >
         <action
             android:id="@+id/action_editTaskFragment_to_taskViewFragment"
@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/seeAllTasksFragment"
         android:name="com.lodbrock.tasker.SeeAllTasksFragment"
-        android:label="All tasks"
+        android:label="@string/see_all_page_title"
         tools:layout="@layout/fragment_see_all_tasks" >
         <action
             android:id="@+id/action_seeAllTasksFragment_to_taskViewFragment"
@@ -45,7 +45,7 @@
     <fragment
         android:id="@+id/taskViewFragment"
         android:name="com.lodbrock.tasker.TaskViewFragment"
-        android:label="View Task"
+        android:label="@string/task_view_page_title"
         tools:layout="@layout/fragment_task_view" >
         <action
             android:id="@+id/action_taskViewFragment_to_editTaskFragment"

@@ -69,7 +69,7 @@ class SeeAllTasksFragment : Fragment() {
             override fun onDaySelected(calendar: Calendar) {
                 viewModel.switchDayLiveData(YearDayMonth.fromCalendar(calendar))
                 val format = DateFormat.getDateInstance().format(calendar.time)
-                binding.archiveStatusLabel.text = "All tasks for $format"
+                binding.archiveStatusLabel.text = resources.getString(R.string.all_tasks_for, format)
             }
         })
 
@@ -85,8 +85,9 @@ class SeeAllTasksFragment : Fragment() {
             )
 
             taskDialog.showTaskDialog(
-                "Add Task For $dateText",
-                "Add",
+
+                resources.getString(R.string.add_task_for, dateText),
+                resources.getString(R.string.add_text),
                 object : TaskDialog.OnDialogClickListener {
                     override fun onClick(task: Task?) {
                         task?.let {
@@ -147,18 +148,23 @@ class SeeAllTasksFragment : Fragment() {
                     val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
                         R.color.red_200)
 
+                    val snackbarText = resources.getString(R.string.was_deleted_text,
+                        TextUtil.threeDotLine(task.title, 15))
+
                     Snackbar.make(viewHolder.itemView,
-                        "\"${TextUtil.threeDotLine(task.title, 15)}\" was deleted",
+                        snackbarText,
                         Snackbar.LENGTH_LONG)
                         .setTextColor(textColor)
                         .setBackgroundTint(bcgColor)
                         .setActionTextColor(actionColor)
-                        .setAction("Undo") {
+                        .setAction(resources.getString(R.string.undo_text)) {
                             viewModel.addTask(task)
                         }
                         .show()
                 } else {
-                    Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT)
+                    Toast.makeText(context,
+                        resources.getString(R.string.failed_to_delete_task_text),
+                        Toast.LENGTH_SHORT)
                         .show()
                 }
 

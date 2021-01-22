@@ -49,7 +49,7 @@
                 android:layout_gravity="center"
                 android:paddingTop="24dp"
                 android:paddingBottom="24dp"
-                android:text="No Tasks for this date"
+                android:text="@string/see_all_tasks_empty_hint"
                 android:textAlignment="center"
                 android:textColor="?attr/semiTransparentHintColor"
                 android:textSize="24sp" />

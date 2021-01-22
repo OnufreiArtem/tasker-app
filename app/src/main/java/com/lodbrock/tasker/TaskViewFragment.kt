@@ -42,11 +42,11 @@ class TaskViewFragment : Fragment() {
                     taskViewDescription.text.clear()
                     taskViewDescription.text.append(it.description)
                     viewSwitchIsTaskDone.isChecked = task.done
-                    taskViewDate.text = "Set to: " + formattedDate
+                    taskViewDate.text = resources.getString(R.string.set_to_text, formattedDate)
                 }
 
             } ?: run {
-                Toast.makeText(context, "Unable to find selected task", Toast.LENGTH_SHORT)
+                Toast.makeText(context, resources.getString(R.string.unable_to_find_sel_task), Toast.LENGTH_SHORT)
                     .show()
                 Navigation.findNavController(binding.root).navigateUp()
             }

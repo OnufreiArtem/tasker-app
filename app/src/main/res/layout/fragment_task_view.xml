@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Task title:"
+            android:text="@string/text_task_title"
             android:textColor="@color/dark_blue"/>
 
         <EditText
@@ -33,13 +33,13 @@
             android:textSize="24sp"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="No title"/>
+            android:hint="@string/view_page_task_title_edit_hint"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Task description:"
+            android:text="@string/text_task_desc"
             android:textColor="@color/dark_blue"/>
 
         <EditText
@@ -56,14 +56,14 @@
             android:textSize="24sp"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="No description" />
+            android:hint="@string/view_page_task_desc_edit_hint" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/view_switch_is_task_done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Done"
+            android:text="@string/done_switch_text"
             android:focusable="false"
             android:clickable="false"
             android:layout_marginBottom="20dp"
@@ -71,7 +71,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_edit" />
-
 
         <TextView
             android:id="@+id/task_view_date"

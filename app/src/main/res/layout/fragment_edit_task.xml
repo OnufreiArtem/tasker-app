@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Task title:"
+            android:text="@string/text_task_title"
             android:textColor="@color/dark_blue"/>
 
         <EditText
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Task description:"
+            android:text="@string/text_task_desc"
             android:textColor="@color/dark_blue"/>
 
         <EditText
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Done"
+            android:text="@string/done_switch_text"
             android:layout_marginBottom="20dp"
             android:textColor="@color/dark_blue"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Use current day"
+            android:text="@string/use_current_day_switch_text"
             android:layout_marginBottom="20dp"
             android:textColor="@color/dark_blue"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +85,7 @@
             android:id="@+id/select_date_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Press to select date"
+            android:text="@string/select_date_btn_text"
             android:layout_marginBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
             android:id="@+id/edit_task_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit task"
+            android:text="@string/edit_task_btn_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/select_date_btn" />

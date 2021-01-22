@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:importantForAutofill="no"
-        android:hint="Title Here"
+        android:hint="@string/title_here_text"
         android:inputType="text"
         style="@style/Theme.Tasker.EditText"
         android:layout_marginBottom="20dp"/>
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:importantForAutofill="no"
-        android:hint="Description Here"
+        android:hint="@string/description_here_text"
         android:inputType="textMultiLine"
         style="@style/Theme.Tasker.EditText"
         android:layout_marginBottom="20dp" />
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:text="Done"
+        android:text="@string/done_switch_text"
         android:layout_marginBottom="20dp"
         android:textColor="@color/dark_blue" />
 

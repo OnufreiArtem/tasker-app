@@ -51,17 +51,6 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         taskDialog = TaskDialog(activity, layoutInflater)
 
-        // Alarm
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent =  Intent(context, AlertReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0)
-
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.SECOND, 10);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
-
-        //alarmManager.cancel(pendingIntent)
-
         registerObservables()
 
         val listener = object : ItemClickListener {
@@ -97,8 +86,8 @@ class HomeFragment : Fragment() {
 
         binding.addFloatingBtn.setOnClickListener {
             taskDialog.showTaskDialog(
-                "Add Task For Today",
-                "Add",
+                resources.getString(R.string.add_task_for, resources.getString(R.string.today_text)),
+                resources.getString(R.string.add_text),
                 object : TaskDialog.OnDialogClickListener{
                     override fun onClick(task: Task?) {
                         task?.let {
@@ -144,7 +133,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int) {
-        binding.homeTaskNumberLabel.text = "$tasksDoneNumber/$allTasksNumber"
+        binding.homeTaskNumberLabel.text = resources.getString(
+            R.string.home_page_number_header_text, tasksDoneNumber, allTasksNumber)
     }
 
     private val inProgressItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
@@ -172,18 +162,25 @@ class HomeFragment : Fragment() {
                         val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
                             R.color.red_200)
 
+                        val snackbarText = resources.getString(
+                            R.string.was_deleted_text,
+                            TextUtil.threeDotLine(task.title, 15)
+                        )
+
                         Snackbar.make(viewHolder.itemView,
-                            "\"${TextUtil.threeDotLine(task.title, 15)}\" was deleted",
+                            snackbarText,
                             Snackbar.LENGTH_LONG)
                             .setTextColor(textColor)
                             .setBackgroundTint(bcgColor)
                             .setActionTextColor(actionColor)
-                            .setAction("Undo") {
+                            .setAction(resources.getString(R.string.undo_text)) {
                                 viewModel.addTask(task)
                             }
                             .show()
                     } else {
-                        Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT)
+                        Toast.makeText(context,
+                            resources.getString(R.string.failed_to_delete_task_text),
+                            Toast.LENGTH_SHORT)
                             .show()
                     }
 
@@ -191,7 +188,9 @@ class HomeFragment : Fragment() {
 
                 ItemTouchHelper.RIGHT -> {
                     if (!viewModel.makeTaskDone(task)) {
-                        Toast.makeText(context, "Failed to make task done", Toast.LENGTH_SHORT)
+                        Toast.makeText(context,
+                            resources.getString(R.string.failed_to_make_task_done_text),
+                            Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -224,18 +223,25 @@ class HomeFragment : Fragment() {
                         val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
                             R.color.red_200)
 
+                        val snackbarText = resources.getString(
+                            R.string.was_deleted_text,
+                            TextUtil.threeDotLine(task.title, 15)
+                        )
+
                         Snackbar.make(viewHolder.itemView,
-                            "\"${TextUtil.threeDotLine(task.title, 15)}\" was deleted",
+                            snackbarText,
                             Snackbar.LENGTH_LONG)
                             .setTextColor(textColor)
                             .setBackgroundTint(bcgColor)
                             .setActionTextColor(actionColor)
-                            .setAction("Undo") {
+                            .setAction(resources.getText(R.string.undo_text)) {
                                 viewModel.addTask(task)
                             }
                             .show()
                     } else {
-                        Toast.makeText(context, "Failed to delete task", Toast.LENGTH_SHORT)
+                        Toast.makeText(context,
+                            resources.getString(R.string.failed_to_delete_task_text),
+                            Toast.LENGTH_SHORT)
                             .show()
                     }
 
@@ -243,7 +249,9 @@ class HomeFragment : Fragment() {
 
                 ItemTouchHelper.RIGHT -> {
                     if (!viewModel.makeTaskNotDone(task)) {
-                        Toast.makeText(context, "Failed to make task not done", Toast.LENGTH_SHORT)
+                        Toast.makeText(context,
+                            resources.getString(R.string.failed_to_make_task_not_done_text),
+                            Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

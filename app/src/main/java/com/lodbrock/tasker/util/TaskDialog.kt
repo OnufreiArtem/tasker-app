@@ -54,7 +54,7 @@ class TaskDialog(private val activity: Activity?, private val inflater: LayoutIn
                         dialog.dismiss()
                     }
                 }
-                setNegativeButton("Cancel") { dialog, _ ->
+                setNegativeButton(it.resources.getString(R.string.cancel_text)) { dialog, _ ->
                     run {
                         negativeClickListener?.let { negativeClickListener.onClick(null) }
                         dialog.cancel()
