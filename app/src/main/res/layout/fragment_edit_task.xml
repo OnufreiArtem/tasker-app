@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="@string/text_task_title"
-            android:textColor="@color/dark_blue"/>
+            android:textColor="?attr/paragraphColor"/>
 
         <EditText
             android:id="@+id/task_edit_title"
@@ -29,7 +29,7 @@
             android:layout_marginBottom="20dp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             android:textSize="24sp"
             android:importantForAutofill="no"
             android:inputType="text"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="@string/text_task_desc"
-            android:textColor="@color/dark_blue"/>
+            android:textColor="?attr/paragraphColor"/>
 
         <EditText
             android:id="@+id/task_edit_description"
@@ -50,7 +50,7 @@
             android:layout_marginBottom="20dp"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             android:textSize="24sp"
             android:importantForAutofill="no"
             android:inputType="textImeMultiLine"
@@ -63,7 +63,7 @@
             android:textSize="18sp"
             android:text="@string/done_switch_text"
             android:layout_marginBottom="20dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_edit" />
@@ -76,7 +76,7 @@
             android:textSize="18sp"
             android:text="@string/use_current_day_switch_text"
             android:layout_marginBottom="20dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_edit" />

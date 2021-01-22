@@ -41,6 +41,7 @@
             android:paddingTop="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="0dp"
+            android:textColor="?attr/paragraphColor"
             android:textSize="16sp"
             android:typeface="normal" />
 

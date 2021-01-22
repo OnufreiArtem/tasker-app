@@ -11,14 +11,22 @@
         <item name="colorSecondaryVariant">@color/dark_blue</item>
         <item name="colorOnSecondary">@color/red_200</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:actionBarStyle">@style/Theme.Tasker.DarkActionBar</item>
 
         <item name="inProgressColor">@color/white</item>
         <item name="doneColor">@color/green_200</item>
         <item name="missedColor">@color/red_500</item>
-        <item name="semiTransparentHintColor">@color/transparent_grey</item>
+
+        <item name="semiTransparentHintColor">@color/transparent_dark_grey</item>
+        <item name="paragraphColor">@color/dark_blue</item>
+        <item name="itemOneTextColor">@color/white</item>
+        <item name="itemSecondTextColor">@color/dark_blue</item>
+        <item name="itemArchiveBcg">@color/white</item>
+
+        <item name="homeTitleColor">@color/white</item>
     </style>
 
     <declare-styleable name="TaskerColors">
@@ -26,32 +34,33 @@
         <attr name="doneColor" format="color"/>
         <attr name="missedColor" format="color"/>
         <attr name="semiTransparentHintColor" format="color"/>
+        <attr name="paragraphColor" format="color"/>
+        <attr name="itemOneTextColor" format="color"/>
+        <attr name="itemSecondTextColor" format="color"/>
+        <attr name="itemArchiveBcg" format="color"/>
+        <attr name="homeTitleColor" format="color"/>
     </declare-styleable>
 
-
     <style name="Theme.Tasker.SemiTransparentText">
-        <item name="android:textColor">@color/transparent_grey</item>
-    </style>
-
-    <style name="Theme.Tasker.ActionBar" parent="Theme.Tasker">
-        <item name="android:background">@color/green_200</item>
+        <item name="android:textColor">?attr/semiTransparentHintColor</item>
     </style>
 
     <style name="Theme.Tasker.Paragraph" parent="Theme.Tasker">
-        <item name="android:textColor">@color/dark_blue</item>
+        <item name="android:textColor">?attr/paragraphColor</item>
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Theme.Tasker.DarkActionBar" parent="Theme.Tasker">
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
     <style name="Theme.Tasker.EditText" parent="Theme.Tasker">
-        <item name="android:textColor">@color/dark_blue</item>
+        <item name="android:textColor">?attr/paragraphColor</item>
+        <item name="android:hint">?attr/semiTransparentHintColor</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="Theme.Tasker.ArchiveItem" parent="Theme.Tasker">
-        <item name="android:background">@color/white</item>
-    </style>
-
     <style name="Theme.Tasker.ArchiveItem.Text" parent="Theme.Tasker">
-        <item name="android:textColor">@color/dark_blue</item>
+        <item name="android:textColor">?attr/paragraphColor</item>
     </style>
 </resources>

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="@string/text_task_title"
-            android:textColor="@color/dark_blue"/>
+            android:textColor="?attr/paragraphColor"/>
 
         <EditText
             android:id="@+id/task_view_title"
@@ -29,10 +29,11 @@
             android:enabled="false"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             android:textSize="24sp"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:textColorHint="?attr/semiTransparentHintColor"
             android:hint="@string/view_page_task_title_edit_hint"/>
 
         <TextView
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="@string/text_task_desc"
-            android:textColor="@color/dark_blue"/>
+            android:textColor="?attr/paragraphColor"/>
 
         <EditText
             android:id="@+id/task_view_description"
@@ -52,10 +53,11 @@
             android:enabled="false"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             android:textSize="24sp"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:textColorHint="?attr/semiTransparentHintColor"
             android:hint="@string/view_page_task_desc_edit_hint" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -67,7 +69,7 @@
             android:focusable="false"
             android:clickable="false"
             android:layout_marginBottom="20dp"
-            android:textColor="@color/dark_blue"
+            android:textColor="?attr/paragraphColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_edit" />

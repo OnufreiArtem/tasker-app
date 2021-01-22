@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="80dp"
-                android:textColor="@color/white"
+                android:textColor="?attr/homeTitleColor"
                 android:textSize="64sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tasks_done_text"
-                android:textColor="@color/white"
+                android:textColor="?attr/homeTitleColor"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/task_item" />
+                    tools:listitem="@layout/task_item"
+                    tools:itemCount="3"/>
 
                 <TextView
                     android:id="@+id/in_progress_tasks_status"
@@ -99,7 +100,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/task_item" />
+                    tools:listitem="@layout/task_done_item"
+                    tools:itemCount="3"/>
 
                 <TextView
                     android:id="@+id/done_tasks_status"

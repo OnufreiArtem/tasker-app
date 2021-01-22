@@ -34,7 +34,7 @@
         android:textSize="18sp"
         android:text="@string/done_switch_text"
         android:layout_marginBottom="20dp"
-        android:textColor="@color/dark_blue" />
+        android:textColor="?attr/paragraphColor" />
 
 
 

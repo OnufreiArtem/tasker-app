@@ -7,9 +7,12 @@
     <color name="blue_500">#1881D4</color>
     <color name="blue_700">#0476D0</color>
     <color name="dark_blue">#30475E</color>
+    <color name="darker_blue">#1C2937</color>
     <color name="green_200">#B3F3A8</color>
     <color name="green_500">#5AE543</color>
-    <color name="transparent_grey">#4D30475E</color>
+    <color name="transparent_dark_grey">#4D30475E</color>
+    <color name="transparent_light_grey">#4DFFFFFF</color>
+    <color name="light_blue">#DCEEFF</color>
     <color name="red_200">#F7B0B0</color>
     <color name="red_500">#F05454</color>
     <color name="teal_200">#FF03DAC5</color>

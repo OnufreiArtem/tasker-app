@@ -68,7 +68,7 @@ class CalendarAdapter(
 
         binding.daySelectedBackground.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        if(!isIn) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.transparent_grey))
+        if(!isIn) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.transparent_light_grey))
         else {
              view.setOnClickListener {
                 selectDayView(binding, position, dates[position].toCalendar())
