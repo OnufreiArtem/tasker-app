@@ -27,6 +27,17 @@
         <item name="itemArchiveBcg">@color/white</item>
 
         <item name="homeTitleColor">@color/white</item>
+
+        <item name="drawerBcg">@color/white</item>
+
+        <item name="snackbarBcg">@color/darker_blue</item>
+        <item name="snackbarTextColor">@color/white</item>
+        <item name="snackbarActionColor">@color/red_500</item>
+
+        <item name="outColor">?attr/semiTransparentHintColor</item>
+        <item name="inColor">@color/darker_blue</item>
+        <item name="todayColor">@color/red_500</item>
+        <item name="selectedColor">@color/white</item>
     </style>
 
     <declare-styleable name="TaskerColors">
@@ -39,6 +50,17 @@
         <attr name="itemSecondTextColor" format="color"/>
         <attr name="itemArchiveBcg" format="color"/>
         <attr name="homeTitleColor" format="color"/>
+        <attr name="snackbarBcg" format="color" />
+        <attr name="snackbarTextColor" format="color" />
+        <attr name="snackbarActionColor" format="color" />
+        <attr name="drawerBcg" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="AirCalendarView">
+        <attr name="outColor" format="color"/>
+        <attr name="inColor" format="color"/>
+        <attr name="todayColor" format="color"/>
+        <attr name="selectedColor" format="reference"/>
     </declare-styleable>
 
     <style name="Theme.Tasker.SemiTransparentText">

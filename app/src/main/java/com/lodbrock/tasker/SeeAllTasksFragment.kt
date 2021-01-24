@@ -1,22 +1,18 @@
 package com.lodbrock.tasker
 
 import android.os.Bundle
-import android.util.Xml
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.applandeo.materialcalendarview.CalendarView
-import com.applandeo.materialcalendarview.EventDay
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.aircalendar.OnDaySelectionListener
 import com.lodbrock.tasker.data.model.Task
@@ -27,11 +23,8 @@ import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
-import org.xmlpull.v1.XmlPullParser
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class SeeAllTasksFragment : Fragment() {
@@ -64,6 +57,9 @@ class SeeAllTasksFragment : Fragment() {
         taskArchiveAdapter = TaskArchiveRecyclerAdapter(listOf(), listener)
 
         registerObservables()
+
+        binding.archiveStatusLabel.text =  resources.getString(R.string.all_tasks_for,
+            resources.getString(R.string.today_text))
 
         binding.airCalendar.adapter.setOnDayClickListener( object : OnDaySelectionListener {
             override fun onDaySelected(calendar: Calendar) {
@@ -141,12 +137,12 @@ class SeeAllTasksFragment : Fragment() {
                 val result = viewModel.deleteTask(task)
 
                 if (result) {
-                    val textColor = ContextCompat.getColor(viewHolder.itemView.context,
-                        R.color.white)
-                    val bcgColor = ContextCompat.getColor(viewHolder.itemView.context,
-                        R.color.dark_blue)
-                    val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
-                        R.color.red_200)
+                    val sAttr = viewHolder.itemView.context.theme
+                        .obtainStyledAttributes(R.styleable.TaskerColors)
+
+                    val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
+                    val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
+                    val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
 
                     val snackbarText = resources.getString(R.string.was_deleted_text,
                         TextUtil.threeDotLine(task.title, 15))

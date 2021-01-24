@@ -1,36 +1,25 @@
 package com.lodbrock.tasker
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.lodbrock.tasker.aircalendar.OnDaySelectionListener
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
 import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
-import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.HomeViewModel
-import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -154,13 +143,14 @@ class HomeFragment : Fragment() {
                 ItemTouchHelper.LEFT -> {
                     val result = viewModel.deleteTask(task)
 
+
                     if (result) {
-                        val textColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            R.color.white)
-                        val bcgColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            R.color.dark_blue)
-                        val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            R.color.red_200)
+                        val sAttr = viewHolder.itemView.context.theme
+                            .obtainStyledAttributes(R.styleable.TaskerColors)
+
+                        val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
+                        val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
+                        val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
 
                         val snackbarText = resources.getString(
                             R.string.was_deleted_text,
@@ -216,12 +206,12 @@ class HomeFragment : Fragment() {
                     val result = viewModel.deleteTask(task)
 
                     if (result) {
-                        val textColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            R.color.white)
-                        val bcgColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            R.color.dark_blue)
-                        val actionColor = ContextCompat.getColor(viewHolder.itemView.context,
-                            R.color.red_200)
+                        val sAttr = viewHolder.itemView.context.theme
+                            .obtainStyledAttributes(R.styleable.TaskerColors)
+
+                        val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
+                        val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
+                        val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
 
                         val snackbarText = resources.getString(
                             R.string.was_deleted_text,

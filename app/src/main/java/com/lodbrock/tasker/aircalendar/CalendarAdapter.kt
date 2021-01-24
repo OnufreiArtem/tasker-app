@@ -25,6 +25,21 @@ class CalendarAdapter(
 
     private var selectedDate : Calendar = Calendar.getInstance()
 
+    private var outColor : Int = 0
+    private var inColor : Int = 0
+    private var todayColor : Int = 0
+    private var selectionColor : Int = 0
+
+
+    init {
+        val sAttr = ctx.theme.obtainStyledAttributes(R.styleable.AirCalendarView)
+        outColor = sAttr.getColor(R.styleable.AirCalendarView_outColor, 0)
+        inColor = sAttr.getColor(R.styleable.AirCalendarView_inColor, 0)
+        todayColor = sAttr.getColor(R.styleable.AirCalendarView_todayColor, 0)
+        selectionColor = sAttr.getColor(R.styleable.AirCalendarView_selectedColor, 0)
+    }
+
+
     fun setOnDayClickListener(listener : OnDaySelectionListener) {
         onDayClickListener = listener
     }
@@ -68,20 +83,20 @@ class CalendarAdapter(
 
         binding.daySelectedBackground.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        if(!isIn) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.transparent_light_grey))
+        if(!isIn) binding.aircalendarDayText.setTextColor(outColor)
         else {
              view.setOnClickListener {
                 selectDayView(binding, position, dates[position].toCalendar())
              }
-            binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.dark_blue))
+            binding.aircalendarDayText.setTextColor(inColor)
         }
 
          if(isSelected) {
-             binding.aircalendarDayText.setTextColor(Color.WHITE)
+             binding.aircalendarDayText.setTextColor(selectionColor)
              drawAsSelectedDate(binding, position)
              binding.daySelectedBackground.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
              prevSelectedIndex = position
-        } else if(isToday) binding.aircalendarDayText.setTextColor(ctx.resources.getColor(R.color.red_500))
+        } else if(isToday) binding.aircalendarDayText.setTextColor(todayColor)
 
         if (events.contains(dates[position])) {
             binding.aircalendarDayImg.setImageResource(R.drawable.ic_circle)
@@ -120,7 +135,7 @@ class CalendarAdapter(
             prevTextColorRes = binding.aircalendarDayText.currentTextColor
 
             binding.daySelectedBackground.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
-            binding.aircalendarDayText.setTextColor(Color.WHITE)
+            binding.aircalendarDayText.setTextColor(selectionColor)
 
         } catch (e: Exception) { }
     }
