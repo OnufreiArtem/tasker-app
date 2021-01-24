@@ -80,7 +80,9 @@ class CalendarView(context: Context, attrs: AttributeSet) : LinearLayout(context
         else
             context.resources.configuration.locale
 
-        val format = SimpleDateFormat("MMM, y", current).format(cursor.time)
+        val format = SimpleDateFormat("MMM y", current)
+            .format(cursor.time)
+            .toUpperCase(current)
 
         headerTitle.text = format
     }
