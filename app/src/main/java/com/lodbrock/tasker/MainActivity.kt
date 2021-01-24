@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         pageLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.seeAllTasksFragment, R.id.homeFragment))
 
-        bottomNavigationView = binding.navigationDrawer
+        bottomNavigationView = binding.bottomNavigation
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
 
