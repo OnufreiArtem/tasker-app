@@ -7,7 +7,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -19,6 +18,7 @@ import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskArchiveRecyclerAdapter
+import com.lodbrock.tasker.ui.adapters.TaskItemCallback
 import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
@@ -70,7 +70,7 @@ class SeeAllTasksFragment : Fragment() {
         })
 
         binding.taskArchiveRecycler.adapter = taskArchiveAdapter
-        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(binding.taskArchiveRecycler)
+        ItemTouchHelper(getItemTouchCallback()).attachToRecyclerView(binding.taskArchiveRecycler)
 
         binding.addFloatingBtn.setOnClickListener {
             val dateSelectedCalendar = binding.airCalendar.adapter.getSelectedDate()
@@ -103,7 +103,7 @@ class SeeAllTasksFragment : Fragment() {
 
     private fun registerObservables() {
         viewModel.getAllTasksForToday().observe(viewLifecycleOwner, { list ->
-            taskArchiveAdapter.setTaskList(list)
+            taskArchiveAdapter.setTasks(list)
             if (taskArchiveAdapter.itemCount == 0) showEmptyListHint() else hideEmptyListHint()
         })
 
@@ -121,50 +121,53 @@ class SeeAllTasksFragment : Fragment() {
         binding.archiveEmptyListLabel.visibility = VISIBLE
     }
 
-    private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder,
-        ): Boolean {
-            return false
+    private fun deleteOnSwipe(task: Task?, itemView : View) {
+        var result = false
+
+        task?.let{ selectedTask ->
+            result = viewModel.deleteTask(selectedTask)
+
+            if (result) {
+                val sAttr = itemView.context.theme
+                    .obtainStyledAttributes(R.styleable.TaskerColors)
+
+                val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
+                val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
+                val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
+
+                val snackbarText = resources.getString(
+                    R.string.was_deleted_text,
+                    TextUtil.threeDotLine(selectedTask.title, 15)
+                )
+
+                Snackbar.make(itemView,
+                    snackbarText,
+                    Snackbar.LENGTH_LONG)
+                    .setTextColor(textColor)
+                    .setBackgroundTint(bcgColor)
+                    .setActionTextColor(actionColor)
+                    .setAction(resources.getString(R.string.undo_text)) {
+                        viewModel.addTask(selectedTask)
+                    }
+                    .show()
+            }
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val task = taskArchiveAdapter.getTaskAtPosition(viewHolder.adapterPosition)
-            task?.let {
-                val result = viewModel.deleteTask(task)
+        if(!result) {
+            Toast.makeText(context,
+                resources.getString(R.string.failed_to_delete_task_text),
+                Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
-                if (result) {
-                    val sAttr = viewHolder.itemView.context.theme
-                        .obtainStyledAttributes(R.styleable.TaskerColors)
+    private fun getItemTouchCallback() : ItemTouchHelper.SimpleCallback {
+        return object : TaskItemCallback(taskArchiveAdapter) {
+            override fun onSwipeLeft(selectedTask: Task?, itemView: View) =
+                deleteOnSwipe(selectedTask, itemView)
 
-                    val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
-                    val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
-                    val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
-
-                    val snackbarText = resources.getString(R.string.was_deleted_text,
-                        TextUtil.threeDotLine(task.title, 15))
-
-                    Snackbar.make(viewHolder.itemView,
-                        snackbarText,
-                        Snackbar.LENGTH_LONG)
-                        .setTextColor(textColor)
-                        .setBackgroundTint(bcgColor)
-                        .setActionTextColor(actionColor)
-                        .setAction(resources.getString(R.string.undo_text)) {
-                            viewModel.addTask(task)
-                        }
-                        .show()
-                } else {
-                    Toast.makeText(context,
-                        resources.getString(R.string.failed_to_delete_task_text),
-                        Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-            }
+            override fun onSwipeRight(selectedTask: Task?, itemView: View) =
+                deleteOnSwipe(selectedTask, itemView)
         }
     }
 }

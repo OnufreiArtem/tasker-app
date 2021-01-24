@@ -14,11 +14,19 @@ import java.lang.Exception
 
 class TaskArchiveRecyclerAdapter(private var taskList : List<Task>,
                                  private var itemClickListener: ItemClickListener? = null)
-    : RecyclerView.Adapter<TaskArchiveRecyclerAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<TaskArchiveRecyclerAdapter.ViewHolder>(), TaskRecyclerAdapter {
 
-    fun setTaskList(taskList: List<Task>) {
-        this.taskList = taskList
+    override fun setTasks(tasks: List<Task>) {
+        this.taskList = tasks
         notifyDataSetChanged()
+    }
+
+    override fun getTaskAtPosition(position: Int) : Task? {
+        return try {
+            taskList[position]
+        } catch (e: Exception) {
+            null
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
@@ -34,13 +42,6 @@ class TaskArchiveRecyclerAdapter(private var taskList : List<Task>,
         return taskList.size
     }
 
-    fun getTaskAtPosition(position: Int) : Task? {
-        return try {
-            taskList[position]
-        } catch (e: Exception) {
-            null
-        }
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val task = taskList[position]

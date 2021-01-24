@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.databinding.FragmentHomeBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
+import com.lodbrock.tasker.ui.adapters.SimpleTaskRecyclerAdapter
+import com.lodbrock.tasker.ui.adapters.TaskItemCallback
 import com.lodbrock.tasker.ui.adapters.TaskRecyclerAdapter
 import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
@@ -26,8 +26,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    private lateinit var inProgressRecyclerAdapter: TaskRecyclerAdapter
-    private lateinit var doneRecyclerAdapter: TaskRecyclerAdapter
+    private lateinit var inProgressRecyclerAdapter: SimpleTaskRecyclerAdapter
+    private lateinit var doneRecyclerAdapter: SimpleTaskRecyclerAdapter
 
     private lateinit var taskDialog: TaskDialog
 
@@ -50,15 +50,15 @@ class HomeFragment : Fragment() {
         }
 
         //Setting RecyclerViews------------------------
-        inProgressRecyclerAdapter = TaskRecyclerAdapter(
+        inProgressRecyclerAdapter = SimpleTaskRecyclerAdapter(
             viewModel.getInProgressTasks(),
-            TaskRecyclerAdapter.TaskRecyclerType.PROGRESS,
+            SimpleTaskRecyclerAdapter.TaskRecyclerType.PROGRESS,
             listener
         )
 
-        doneRecyclerAdapter = TaskRecyclerAdapter(
+        doneRecyclerAdapter = SimpleTaskRecyclerAdapter(
             viewModel.getDoneTasks(),
-            TaskRecyclerAdapter.TaskRecyclerType.DONE,
+            SimpleTaskRecyclerAdapter.TaskRecyclerType.DONE,
             listener
         )
 
@@ -68,8 +68,10 @@ class HomeFragment : Fragment() {
         binding.tasksDoneList.adapter = doneRecyclerAdapter
         doneRecyclerAdapter.notifyDataSetChanged()
 
-        ItemTouchHelper(inProgressItemTouchCallback).attachToRecyclerView(binding.tasksInProgressList)
-        ItemTouchHelper(doneItemTouchCallback).attachToRecyclerView(binding.tasksDoneList)
+        ItemTouchHelper(getAdapterTouchCallback(inProgressRecyclerAdapter, true))
+            .attachToRecyclerView(binding.tasksInProgressList)
+        ItemTouchHelper(getAdapterTouchCallback(doneRecyclerAdapter, false))
+            .attachToRecyclerView(binding.tasksDoneList)
 
         //------------------------------------------------------>
 
@@ -126,128 +128,66 @@ class HomeFragment : Fragment() {
             R.string.home_page_number_header_text, tasksDoneNumber, allTasksNumber)
     }
 
-    private val inProgressItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder,
-        ): Boolean {
-            return false
+    private fun deleteOnSwipe(task: Task?, itemView : View) {
+        var result = false
+
+        task?.let{ selectedTask ->
+            result = viewModel.deleteTask(selectedTask)
+
+            if (result) {
+                val sAttr = itemView.context.theme
+                    .obtainStyledAttributes(R.styleable.TaskerColors)
+
+                val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
+                val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
+                val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
+
+                val snackbarText = resources.getString(
+                    R.string.was_deleted_text,
+                    TextUtil.threeDotLine(selectedTask.title, 15)
+                )
+
+                Snackbar.make(itemView,
+                    snackbarText,
+                    Snackbar.LENGTH_LONG)
+                    .setTextColor(textColor)
+                    .setBackgroundTint(bcgColor)
+                    .setActionTextColor(actionColor)
+                    .setAction(resources.getString(R.string.undo_text)) {
+                        viewModel.addTask(selectedTask)
+                    }
+                    .show()
+            }
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val task = inProgressRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
-
-            when (direction) {
-                ItemTouchHelper.LEFT -> {
-                    val result = viewModel.deleteTask(task)
-
-
-                    if (result) {
-                        val sAttr = viewHolder.itemView.context.theme
-                            .obtainStyledAttributes(R.styleable.TaskerColors)
-
-                        val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
-                        val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
-                        val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
-
-                        val snackbarText = resources.getString(
-                            R.string.was_deleted_text,
-                            TextUtil.threeDotLine(task.title, 15)
-                        )
-
-                        Snackbar.make(viewHolder.itemView,
-                            snackbarText,
-                            Snackbar.LENGTH_LONG)
-                            .setTextColor(textColor)
-                            .setBackgroundTint(bcgColor)
-                            .setActionTextColor(actionColor)
-                            .setAction(resources.getString(R.string.undo_text)) {
-                                viewModel.addTask(task)
-                            }
-                            .show()
-                    } else {
-                        Toast.makeText(context,
-                            resources.getString(R.string.failed_to_delete_task_text),
-                            Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                }
-
-                ItemTouchHelper.RIGHT -> {
-                    if (!viewModel.makeTaskDone(task)) {
-                        Toast.makeText(context,
-                            resources.getString(R.string.failed_to_make_task_done_text),
-                            Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-
-            }
+        if(!result) {
+            Toast.makeText(context,
+                resources.getString(R.string.failed_to_delete_task_text),
+                Toast.LENGTH_SHORT)
+                .show()
         }
     }
-    private val doneItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder,
-        ): Boolean {
-            return false
+    private fun changeTaskStateOnSwipe(task: Task?, stateToMake: Boolean) {
+        var result = false
+        task?.let {
+            result = if(stateToMake) viewModel.makeTaskDone(it) else viewModel.makeTaskNotDone(it)
         }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val task = doneRecyclerAdapter.getTaskAtPosition(viewHolder.adapterPosition)
-
-            when (direction) {
-                ItemTouchHelper.LEFT -> {
-                    val result = viewModel.deleteTask(task)
-
-                    if (result) {
-                        val sAttr = viewHolder.itemView.context.theme
-                            .obtainStyledAttributes(R.styleable.TaskerColors)
-
-                        val textColor = sAttr.getColor(R.styleable.TaskerColors_snackbarTextColor, 0)
-                        val bcgColor = sAttr.getColor(R.styleable.TaskerColors_snackbarBcg, 0)
-                        val actionColor = sAttr.getColor(R.styleable.TaskerColors_snackbarActionColor, 0)
-
-                        val snackbarText = resources.getString(
-                            R.string.was_deleted_text,
-                            TextUtil.threeDotLine(task.title, 15)
-                        )
-
-                        Snackbar.make(viewHolder.itemView,
-                            snackbarText,
-                            Snackbar.LENGTH_LONG)
-                            .setTextColor(textColor)
-                            .setBackgroundTint(bcgColor)
-                            .setActionTextColor(actionColor)
-                            .setAction(resources.getText(R.string.undo_text)) {
-                                viewModel.addTask(task)
-                            }
-                            .show()
-                    } else {
-                        Toast.makeText(context,
-                            resources.getString(R.string.failed_to_delete_task_text),
-                            Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                }
-
-                ItemTouchHelper.RIGHT -> {
-                    if (!viewModel.makeTaskNotDone(task)) {
-                        Toast.makeText(context,
-                            resources.getString(R.string.failed_to_make_task_not_done_text),
-                            Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-
-            }
+        if (!result) {
+            Toast.makeText(context,
+                resources.getString(R.string.failed_to_make_task_done_text),
+                Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
+    private fun getAdapterTouchCallback(adapter: TaskRecyclerAdapter, makeTaskState : Boolean)
+        : ItemTouchHelper.SimpleCallback{
+        return object : TaskItemCallback(adapter) {
+            override fun onSwipeLeft(selectedTask: Task?, itemView: View) =
+                deleteOnSwipe(selectedTask, itemView)
+
+            override fun onSwipeRight(selectedTask: Task?, itemView: View) =
+                changeTaskStateOnSwipe(selectedTask, makeTaskState)
+        }
+    }
 }
