@@ -6,7 +6,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.CalendarView
 import android.widget.Toast
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.aircalendar.OnDaySelectionListener
 import com.lodbrock.tasker.data.model.Task
+import com.lodbrock.tasker.databinding.AircalendarDayLayoutBinding
+import com.lodbrock.tasker.databinding.AircalendarLayoutBinding
 import com.lodbrock.tasker.databinding.FragmentSeeAllTasksBinding
 import com.lodbrock.tasker.ui.adapters.ItemClickListener
 import com.lodbrock.tasker.ui.adapters.TaskArchiveRecyclerAdapter
