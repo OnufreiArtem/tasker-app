@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
 
     private lateinit var navController: NavController
-    private lateinit var pageLayout:  ConstraintLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -28,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         navController = findNavController(R.id.fragment)
-        pageLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.seeAllTasksFragment, R.id.homeFragment))
 
         bottomNavigationView = binding.bottomNavigation
