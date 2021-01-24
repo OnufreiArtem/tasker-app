@@ -2,14 +2,14 @@ package com.lodbrock.tasker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lodbrock.tasker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
 
     private lateinit var navController: NavController
-    private lateinit var drawerLayout:  DrawerLayout
+    private lateinit var pageLayout:  ConstraintLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private lateinit var navigationView: NavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +28,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         navController = findNavController(R.id.fragment)
-        drawerLayout = binding.drawerLayout
-        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+        pageLayout = binding.drawerLayout
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.seeAllTasksFragment, R.id.homeFragment))
 
-        navigationView = binding.navigationDrawer
-        navigationView.setupWithNavController(navController)
-
+        bottomNavigationView = binding.navigationDrawer
         setupActionBarWithNavController(navController, appBarConfiguration)
+        bottomNavigationView.setupWithNavController(navController)
+
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

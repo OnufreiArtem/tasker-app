@@ -15,15 +15,4 @@
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
     </group>
-
-    <item android:title="Community" >
-        <menu>
-            <item
-                android:icon="@drawable/ic_star"
-                android:title="Rate app" />
-            <item
-                android:icon="@drawable/ic_share"
-                android:title="Share" />
-        </menu>
-    </item>
 </menu>
