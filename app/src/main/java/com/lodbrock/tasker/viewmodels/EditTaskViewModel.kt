@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.data.repositories.AppRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class EditTaskViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,7 +26,7 @@ class EditTaskViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun editTask(task: Task) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.editTask(task)
         }
     }

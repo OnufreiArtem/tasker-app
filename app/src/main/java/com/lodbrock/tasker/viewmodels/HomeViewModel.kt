@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.data.repositories.AppRepository
 import com.lodbrock.tasker.util.YearDayMonth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -35,25 +36,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addTask(task: Task) {
-        viewModelScope.launch { repository.addTasks(task) }
+        viewModelScope.launch(Dispatchers.IO) { repository.addTasks(task) }
     }
 
     fun makeTaskDone(task: Task) : Boolean{
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.makeTaskDone(task)
         }
         return true
     }
 
     fun makeTaskNotDone(task: Task) : Boolean{
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.makeTaskNotDone(task)
         }
         return true
     }
 
     fun deleteTask(task: Task) : Boolean {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTask(task)
         }
         return true
