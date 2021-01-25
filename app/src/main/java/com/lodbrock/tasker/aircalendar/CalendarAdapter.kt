@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.core.content.ContextCompat
 import com.lodbrock.tasker.R
 import com.lodbrock.tasker.databinding.AircalendarDayLayoutBinding
@@ -65,10 +66,6 @@ class CalendarAdapter(
         this.cursor =  cursor
     }
 
-    private var prevBinding : AircalendarDayLayoutBinding? = null
-    private var prevSelectedIndex: Int? = null
-    private var prevTextColorRes: Int = 0
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView
             ?: inflater.inflate(R.layout.aircalendar_day_layout, parent, false)
@@ -82,62 +79,46 @@ class CalendarAdapter(
         val isToday = YearDayMonth.compare(YearDayMonth.today(), dates[position]) == 0
 
         binding.daySelectedBackground.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
+        binding.aircalendarDayImg.setImageResource(0)
+
 
         if(!isIn) binding.aircalendarDayText.setTextColor(outColor)
-        else {
-             view.setOnClickListener {
-                selectDayView(binding, position, dates[position].toCalendar())
-             }
-            binding.aircalendarDayText.setTextColor(inColor)
-        }
+        else{
+            view.setOnClickListener {
+                selectDayView(dates[position].toCalendar())
+            }
 
-         if(isSelected) {
-             binding.aircalendarDayText.setTextColor(selectionColor)
-             drawAsSelectedDate(binding, position)
-             binding.daySelectedBackground.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
-             prevSelectedIndex = position
-        } else if(isToday) binding.aircalendarDayText.setTextColor(todayColor)
+            when {
+                isSelected -> {
+                    binding.aircalendarDayText.setTextColor(selectionColor)
+                    binding.daySelectedBackground.setImageDrawable(
+                        ContextCompat.getDrawable(ctx, R.drawable.bcg_circle)
+                    )
+                }
+                isToday -> {
+                    binding.aircalendarDayText.setTextColor(todayColor)
+
+                }
+                else -> {
+                    binding.aircalendarDayText.setTextColor(inColor)
+                }
+            }
+        }
 
         if (events.contains(dates[position])) {
             binding.aircalendarDayImg.setImageResource(R.drawable.ic_circle)
-        }
-        else {
-            binding.aircalendarDayImg.setImageResource(0)
         }
 
         return view
     }
 
-    private fun selectDayView(binding: AircalendarDayLayoutBinding, currentPosition: Int, selectedDate: Calendar? = null) {
+    private fun selectDayView(selectedDate: Calendar? = null) {
 
         selectedDate?.let {
             this.selectedDate = selectedDate
-            notifyDataSetChanged()
             onDayClickListener?.onDaySelected(selectedDate)
+            notifyDataSetChanged()
         }
-        drawAsSelectedDate(binding, currentPosition)
-    }
-
-    private fun drawAsSelectedDate(binding: AircalendarDayLayoutBinding, currentPosition: Int) {
-        try {
-            prevSelectedIndex?.let { lsi ->
-                if (currentPosition == lsi) {
-                    return
-
-                } else {
-                    prevBinding?.daySelectedBackground?.setImageDrawable(ColorDrawable(Color.TRANSPARENT))
-                    prevBinding?.aircalendarDayText?.setTextColor(prevTextColorRes)
-                    prevSelectedIndex = currentPosition
-                }
-            }
-
-            prevBinding = binding
-            prevTextColorRes = binding.aircalendarDayText.currentTextColor
-
-            binding.daySelectedBackground.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.bcg_circle))
-            binding.aircalendarDayText.setTextColor(selectionColor)
-
-        } catch (e: Exception) { }
     }
 
 }

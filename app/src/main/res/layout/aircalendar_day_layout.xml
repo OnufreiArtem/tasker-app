@@ -10,49 +10,36 @@
 
     <ImageView
         android:id="@+id/daySelectedBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/aircalendar_selection_circle_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleX="1.55"
-        android:scaleY="1.55"
-        android:contentDescription="@string/aircalendar_selection_circle_desc" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/aircalendar_day_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="?attr/paragraphColor"
+        android:textSize="16sp"
+        android:typeface="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/daySelectedBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/daySelectedBackground" />
 
-
-        <TextView
-            android:id="@+id/aircalendar_day_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="0dp"
-            android:textColor="?attr/paragraphColor"
-            android:textSize="16sp"
-            android:typeface="normal" />
-
-        <ImageView
-            android:id="@+id/aircalendar_day_img"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/aircalendar_cirlce_under_number_desc" />
-
-    </LinearLayout>
-
+    <ImageView
+        android:id="@+id/aircalendar_day_img"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/aircalendar_cirlce_under_number_desc"
+        app:layout_constraintEnd_toEndOf="@+id/daySelectedBackground"
+        app:layout_constraintStart_toStartOf="@+id/daySelectedBackground"
+        app:layout_constraintTop_toBottomOf="@+id/aircalendar_day_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
