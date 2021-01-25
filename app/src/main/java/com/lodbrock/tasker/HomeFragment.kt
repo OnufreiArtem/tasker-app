@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -127,8 +128,35 @@ class HomeFragment : Fragment() {
     }
 
     private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int) {
-        binding.homeTaskNumberLabel.text = resources.getString(
-            R.string.home_page_number_header_text, tasksDoneNumber, allTasksNumber)
+        if(tasksDoneNumber == allTasksNumber) {
+            context?.let {
+                binding.homeTaskNumberLabel.setTextColor(ContextCompat.getColor(it, R.color.green_500))
+            }
+            binding.homeTaskNumberLabel.text = resources.getString(R.string.congratulations_text)
+            binding.tasksDoneText.text = resources.getString(R.string.all_tasks_are_done_text)
+
+            binding.inProgressTasksStatus.visibility = View.GONE
+            binding.tasksInProgressListTitle.visibility = View.GONE
+            binding.tasksInProgressList.visibility = View.GONE
+
+        } else {
+            context?.let {
+                binding.homeTaskNumberLabel.setTextColor(ContextCompat.getColor(it, R.color.white))
+            }
+            binding.homeTaskNumberLabel.text = resources.getString(
+                R.string.home_page_number_header_text,
+                tasksDoneNumber,
+                allTasksNumber
+            )
+
+            binding.tasksDoneText.text = resources.getString(R.string.tasks_done_text)
+
+            //binding.inProgressTasksStatus.visibility = View.INVISIBLE
+            binding.tasksInProgressListTitle.visibility = View.VISIBLE
+            binding.tasksInProgressList.visibility = View.VISIBLE
+        }
+
+
     }
 
     private fun deleteOnSwipe(task: Task?, itemView : View) {

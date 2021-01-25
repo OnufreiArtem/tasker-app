@@ -50,6 +50,9 @@
     <string name="no_tasks_to_do_today_text">No Tasks To Do Today</string>
     <string name="no_tasks_done_for_today_text">No Tasks Done For Today</string>
 
+    <string name="congratulations_text">Greetings!</string>
+    <string name="all_tasks_are_done_text">All task for today are done</string>
+
     <string name="home_page_title">Home</string>
     <string name="see_all_page_title">See All</string>
     <string name="task_view_page_title">Task View</string>
