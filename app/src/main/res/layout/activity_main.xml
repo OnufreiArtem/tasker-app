@@ -27,21 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu"
-        />
-    <!--
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_drawer"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="?attr/drawerBcg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu"/>
-     -->
+        app:menu="@menu/bottom_menu" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

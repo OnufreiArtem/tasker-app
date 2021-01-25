@@ -62,6 +62,9 @@ class HomeFragment : Fragment() {
             listener
         )
 
+        binding.tasksInProgressList.isNestedScrollingEnabled = false
+        binding.tasksDoneList.isNestedScrollingEnabled = false
+
         binding.tasksInProgressList.adapter = inProgressRecyclerAdapter
         inProgressRecyclerAdapter.notifyDataSetChanged()
 

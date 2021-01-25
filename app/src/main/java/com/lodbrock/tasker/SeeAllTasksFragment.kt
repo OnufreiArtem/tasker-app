@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.lodbrock.tasker.aircalendar.OnDaySelectionListener
 import com.lodbrock.tasker.data.model.Task
@@ -73,6 +72,7 @@ class SeeAllTasksFragment : Fragment() {
             }
         })
 
+        binding.taskArchiveRecycler.isNestedScrollingEnabled = false
         binding.taskArchiveRecycler.adapter = taskArchiveAdapter
         ItemTouchHelper(getItemTouchCallback()).attachToRecyclerView(binding.taskArchiveRecycler)
 

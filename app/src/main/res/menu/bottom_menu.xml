@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
+
     <group android:checkableBehavior="single">
         <item
             android:id="@id/homeFragment"
             android:icon="@drawable/ic_home"
             android:title="@string/home_page_title" />
+
         <item
             android:id="@id/seeAllTasksFragment"
-            android:icon="@drawable/ic_home"
+            android:icon="@drawable/ic_all_tasks"
             android:title="@string/see_all_page_title" />
-        <item
-            android:icon="@drawable/ic_settings"
-            android:title="Settings" />
     </group>
+
 </menu>
