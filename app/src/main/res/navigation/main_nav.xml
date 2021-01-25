@@ -12,23 +12,24 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_seeAllTasksFragment"
-            app:destination="@id/seeAllTasksFragment" />
+            app:destination="@id/seeAllTasksFragment"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_left"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_right" />
         <action
             android:id="@+id/action_homeFragment_to_taskViewFragment"
             app:destination="@id/taskViewFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_left"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_right" />
     </fragment>
     <fragment
         android:id="@+id/editTaskFragment"
         android:name="com.lodbrock.tasker.EditTaskFragment"
         android:label="@string/task_edit_page_title"
         tools:layout="@layout/fragment_edit_task" >
-        <action
-            android:id="@+id/action_editTaskFragment_to_taskViewFragment"
-            app:destination="@id/taskViewFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim"/>
         <argument
             android:name="taskToEditId"
             app:argType="long" />
@@ -40,7 +41,11 @@
         tools:layout="@layout/fragment_see_all_tasks" >
         <action
             android:id="@+id/action_seeAllTasksFragment_to_taskViewFragment"
-            app:destination="@id/taskViewFragment" />
+            app:destination="@id/taskViewFragment"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_left"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_right"/>
     </fragment>
     <fragment
         android:id="@+id/taskViewFragment"
@@ -50,8 +55,10 @@
         <action
             android:id="@+id/action_taskViewFragment_to_editTaskFragment"
             app:destination="@id/editTaskFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_left"
+            app:popEnterAnim="@anim/slide_from_left"
+            app:popExitAnim="@anim/slide_right" />
         <argument
             android:name="taskToViewId"
             app:argType="long" />
