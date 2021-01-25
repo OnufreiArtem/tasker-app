@@ -1,5 +1,6 @@
 package com.lodbrock.tasker
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +23,12 @@ import com.lodbrock.tasker.util.TaskDialog
 import com.lodbrock.tasker.util.TextUtil
 import com.lodbrock.tasker.util.YearDayMonth
 import com.lodbrock.tasker.viewmodels.SeeAllTasksViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -74,14 +80,17 @@ class SeeAllTasksFragment : Fragment() {
 
         binding.addFloatingBtn.setOnClickListener {
             val dateSelectedCalendar = binding.airCalendar.adapter.getSelectedDate()
+            
+            val current = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                resources.configuration.locales.get(0)
+            else
+                resources.configuration.locale
 
-            val dateText = DateFormat.getDateInstance().format(dateSelectedCalendar.time)
-            val dateSelected = YearDayMonth.fromCalendar(
-                dateSelectedCalendar
-            )
+            val dateText = SimpleDateFormat("dd MMM yyyy", current)
+                .format(dateSelectedCalendar.time)
+            val dateSelected = YearDayMonth.fromCalendar(dateSelectedCalendar)
 
             taskDialog.showTaskDialog(
-
                 resources.getString(R.string.add_task_for, dateText),
                 resources.getString(R.string.add_text),
                 object : TaskDialog.OnDialogClickListener {
@@ -108,8 +117,13 @@ class SeeAllTasksFragment : Fragment() {
         })
 
         viewModel.getAllEventDates().observe(viewLifecycleOwner, { list ->
-            binding.airCalendar.adapter.setEventList(list.map { YearDayMonth.fromCalendar(it) })
-            binding.airCalendar.adapter.notifyDataSetChanged()
+            GlobalScope.launch(Dispatchers.Default) {
+                val ydmList = list.map { YearDayMonth.fromCalendar(it) }
+                withContext(Dispatchers.Main) {
+                    binding.airCalendar.adapter.setEventList(ydmList)
+                    binding.airCalendar.adapter.notifyDataSetChanged()
+                }
+            }
         })
     }
 

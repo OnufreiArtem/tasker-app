@@ -1,11 +1,15 @@
 package com.lodbrock.tasker.viewmodels
 
 import android.app.Application
+import android.view.Display
 import androidx.lifecycle.*
 import com.lodbrock.tasker.data.model.Task
 import com.lodbrock.tasker.data.repositories.AppRepository
 import com.lodbrock.tasker.util.YearDayMonth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class SeeAllTasksViewModel(application: Application) : AndroidViewModel(application) {
@@ -28,11 +32,11 @@ class SeeAllTasksViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun addTask(task: Task) {
-        viewModelScope.launch { repository.addTasks(task) }
+        viewModelScope.launch(Dispatchers.IO) { repository.addTasks(task) }
     }
 
     fun deleteTask(task: Task) : Boolean {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTask(task)
         }
         return true
@@ -52,9 +56,13 @@ class SeeAllTasksViewModel(application: Application) : AndroidViewModel(applicat
         currentTasksLiveData = repository.getTasksForDate(YearDayMonth.today())
         _allTasksForToday.addSource(currentTasksLiveData, allTasksObserver)
         _allEventDates.addSource(repository.allDatesWithTasks()) {
-            _allEventDates.value = it.map { item -> item.toCalendar() }
+            viewModelScope.launch(Dispatchers.Default) {
+                val calendarList = it.map { item -> item.toCalendar() }
+                withContext(Dispatchers.Main){
+                    _allEventDates.value = calendarList
+                }
+            }
         }
-
     }
 
 
