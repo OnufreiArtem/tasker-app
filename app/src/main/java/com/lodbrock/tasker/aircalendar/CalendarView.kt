@@ -99,7 +99,7 @@ class CalendarView(context: Context, attrs: AttributeSet) : LinearLayout(context
         val dates = mutableListOf<YearDayMonth>()
         for (i in 1..(7*6)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
-            dates.add(YearDayMonth.fromCalendar(calendar))
+            dates.add(YearDayMonth.from(calendar))
 
         }
         adapter.setDateList(dates)

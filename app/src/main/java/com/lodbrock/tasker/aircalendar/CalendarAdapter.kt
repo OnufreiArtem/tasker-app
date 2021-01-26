@@ -74,7 +74,7 @@ class CalendarAdapter(
 
         binding.aircalendarDayText.text = dates[position].day.toString()
 
-        val isSelected = YearDayMonth.compare(dates[position], YearDayMonth.fromCalendar(selectedDate)) == 0
+        val isSelected = YearDayMonth.compare(dates[position], YearDayMonth.from(selectedDate)) == 0
         val isIn = dates[position].month == cursor.get(Calendar.MONTH) && dates[position].year == cursor.get(Calendar.YEAR)
         val isToday = YearDayMonth.compare(YearDayMonth.today(), dates[position]) == 0
 

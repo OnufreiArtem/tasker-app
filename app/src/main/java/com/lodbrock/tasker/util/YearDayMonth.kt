@@ -63,7 +63,7 @@ class YearDayMonth(
             return 0
         }
 
-        fun fromCalendar(calendar: Calendar) : YearDayMonth {
+        fun from(calendar: Calendar) : YearDayMonth {
             return YearDayMonth(
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
