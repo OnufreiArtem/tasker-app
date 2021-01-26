@@ -128,7 +128,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setHeaderTaskNumberLabel(tasksDoneNumber: Int, allTasksNumber: Int) {
-        if(tasksDoneNumber == allTasksNumber) {
+        if(tasksDoneNumber == allTasksNumber && allTasksNumber > 0) {
             context?.let {
                 binding.homeTaskNumberLabel.setTextColor(ContextCompat.getColor(it, R.color.green_500))
             }
