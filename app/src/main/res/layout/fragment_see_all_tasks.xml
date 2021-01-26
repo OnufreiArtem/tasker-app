@@ -18,28 +18,24 @@
                 android:id="@+id/airCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+                <!-- android:elevation="4dp" -->
 
-            <androidx.cardview.widget.CardView
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="4dp"
-                android:textColor="@color/white"
-                app:cardBackgroundColor="@color/blue_500"
-                app:cardCornerRadius="5dp"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="true">
+                android:background="?attr/seeAllTaskStatusColor">
 
                 <TextView
                     android:id="@+id/archive_status_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:padding="12dp"
+                    android:padding="6dp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/itemOneTextColor"
                     android:textSize="18sp" />
 
-            </androidx.cardview.widget.CardView>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/archive_empty_list_label"
