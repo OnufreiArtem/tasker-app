@@ -18,6 +18,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:actionBarStyle">@style/Theme.Tasker.DarkActionBar</item>
         <item name="colorSurface">@color/blue_700</item>
+        <item name="backgroundColor">@color/dark_blue</item>
 
         <item name="inProgressColor">@color/white</item>
         <item name="doneColor">@color/green_200</item>
@@ -41,6 +42,8 @@
         <item name="inColor">@color/light_blue</item>
         <item name="todayColor">@color/red_500</item>
         <item name="selectedColor">@color/light_blue</item>
+
+        <item name="seeAllTaskStatusColor">@color/dark_m_blue</item>
     </style>
 
     <style name="Theme.Tasker.SemiTransparentText">

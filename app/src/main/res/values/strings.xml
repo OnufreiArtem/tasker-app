@@ -32,7 +32,7 @@
     <string name="title_here_text">Title Here</string>
     <string name="description_here_text">Description Here</string>
     <string name="add_task_for">Add task for %s</string>
-    <string name="all_tasks_for">Add tasks for %s</string>
+    <string name="all_tasks_for">All tasks for %s</string>
     <string name="set_to_text">Set to: %s</string>
     <string name="add_text">Add</string>
     <string name="edit_text">Edit</string>

@@ -15,6 +15,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white</item>
         <item name="android:actionBarStyle">@style/Theme.Tasker.DarkActionBar</item>
+        <item name="backgroundColor">@color/white</item>
 
         <item name="inProgressColor">@color/white</item>
         <item name="doneColor">@color/green_200</item>
@@ -38,6 +39,8 @@
         <item name="inColor">@color/darker_blue</item>
         <item name="todayColor">@color/red_500</item>
         <item name="selectedColor">@color/white</item>
+
+        <item name="seeAllTaskStatusColor">@color/blue_500</item>
     </style>
 
     <declare-styleable name="TaskerColors">
@@ -54,6 +57,7 @@
         <attr name="snackbarTextColor" format="color" />
         <attr name="snackbarActionColor" format="color" />
         <attr name="drawerBcg" format="color" />
+        <attr name="seeAllTaskStatusColor" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="AirCalendarView">
