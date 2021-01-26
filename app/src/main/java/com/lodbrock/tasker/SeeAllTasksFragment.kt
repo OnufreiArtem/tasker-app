@@ -68,9 +68,14 @@ class SeeAllTasksFragment : Fragment() {
 
         binding.airCalendar.adapter.setOnDayClickListener( object : OnDaySelectionListener {
             override fun onDaySelected(calendar: Calendar) {
-                viewModel.switchDayLiveData(YearDayMonth.fromCalendar(calendar))
+                viewModel.switchDayLiveData(YearDayMonth.from(calendar))
                 val format = DateFormat.getDateInstance().format(calendar.time)
-                binding.archiveStatusLabel.text = resources.getString(R.string.all_tasks_for, format)
+                val ending = when(YearDayMonth.from(calendar)) {
+                    YearDayMonth.today() -> resources.getString(R.string.today_text)
+                    else -> format
+                }
+
+                binding.archiveStatusLabel.text = resources.getString(R.string.all_tasks_for, ending)
             }
         })
 
@@ -88,7 +93,7 @@ class SeeAllTasksFragment : Fragment() {
 
             val dateText = SimpleDateFormat("dd MMM yyyy", current)
                 .format(dateSelectedCalendar.time)
-            val dateSelected = YearDayMonth.fromCalendar(dateSelectedCalendar)
+            val dateSelected = YearDayMonth.from(dateSelectedCalendar)
 
             taskDialog.showTaskDialog(
                 resources.getString(R.string.add_task_for, dateText),
@@ -118,7 +123,7 @@ class SeeAllTasksFragment : Fragment() {
 
         viewModel.getAllEventDates().observe(viewLifecycleOwner, { list ->
             GlobalScope.launch(Dispatchers.Default) {
-                val ydmList = list.map { YearDayMonth.fromCalendar(it) }
+                val ydmList = list.map { YearDayMonth.from(it) }
                 withContext(Dispatchers.Main) {
                     binding.airCalendar.adapter.setEventList(ydmList)
                     binding.airCalendar.adapter.notifyDataSetChanged()
